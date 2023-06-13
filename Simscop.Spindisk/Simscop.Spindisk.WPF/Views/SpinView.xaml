@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:Simscop.Spindisk.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <StackPanel>
+    <StackPanel IsEnabled="{Binding SpinChangeEnable}">
 
         <TextBlock
             Margin="20,10,0,10"
@@ -22,6 +22,7 @@
                 Width="80"
                 Margin="10,0,0,0"
                 Padding="0"
+                Command="{Binding ConnectComCommand}"
                 Content="O 连接"
                 DockPanel.Dock="Right"
                 Style="{StaticResource CheckBoxAsButton}" />
@@ -30,7 +31,8 @@
                 <ComboBox
                     Width="160"
                     ItemsSource="{Binding ComList}"
-                    SelectedIndex="{Binding SpiningIndex}" />
+                    SelectedIndex="0"
+                    SelectedItem="{Binding ComName}" />
             </Viewbox>
         </DockPanel>
 
@@ -43,6 +45,7 @@
                 Padding="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
+                Command="{Binding ResetCommand}"
                 Content="复位"
                 FontSize="14" />
 
@@ -51,8 +54,10 @@
                 Padding="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
+                Command="{Binding SetDiskCommand}"
                 Content="开启"
                 FontSize="13"
+                IsChecked="{Binding DiskEnable}"
                 Style="{StaticResource CheckBoxAsButton}" />
 
         </UniformGrid>
@@ -65,14 +70,14 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="11"
                 Text="Spining"
                 TextAlignment="Left" />
 
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
-                    ItemsSource="{Binding Spining}"
+                    ItemsSource="{Binding SpiningCollection}"
                     SelectedIndex="{Binding SpiningIndex}" />
             </Viewbox>
         </DockPanel>
@@ -84,14 +89,14 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="11"
                 Text="Dichroic"
                 TextAlignment="Left" />
 
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
-                    ItemsSource="{Binding Dichroic}"
+                    ItemsSource="{Binding DichroicCollection}"
                     SelectedIndex="{Binding DichroicIndex}" />
             </Viewbox>
         </DockPanel>
@@ -102,14 +107,14 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="11"
                 Text="Emission"
                 TextAlignment="Left" />
 
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
-                    ItemsSource="{Binding Emission}"
+                    ItemsSource="{Binding EmissionCollection}"
                     SelectedIndex="{Binding EmissionIndex}" />
             </Viewbox>
         </DockPanel>
@@ -120,14 +125,14 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="12"
-                Text="Emission"
+                FontSize="11"
+                Text="Excitation"
                 TextAlignment="Left" />
 
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
-                    ItemsSource="{Binding Excitation}"
+                    ItemsSource="{Binding ExcitationCollection}"
                     SelectedIndex="{Binding ExcitationIndex}" />
             </Viewbox>
         </DockPanel>

@@ -227,9 +227,9 @@
                     Margin="0,5,2.5,2.5"
                     Background="{DynamicResource Region01}"
                     CornerRadius="10">
-                    <Grid>
+                    <Viewbox>
                         <Image Source="{Binding ImageFirst}"  Width="400"/>
-                    </Grid>
+                    </Viewbox>
                 </Border>
 
                 <Border

@@ -53,7 +53,6 @@ Global
 		SolutionGuid = {CD0A5F91-AE7C-4F5C-A6B0-AF376D9869EC}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Simscop.Fake\Simscop.Fake.projitems*{45577c35-1066-4f18-b261-e31686a472d2}*SharedItemsImports = 5
 		..\Simscop.Fake\Simscop.Fake.projitems*{63ed047f-2718-4331-9038-5d56d0ea3f16}*SharedItemsImports = 13
 		..\Simscop.API\Simscop.API.projitems*{94c26bb3-4dcb-4109-a2b4-38863041faf3}*SharedItemsImports = 13
 		..\Simscop.API\Simscop.API.projitems*{97fca44a-26a5-4957-827a-5db0025aed63}*SharedItemsImports = 5

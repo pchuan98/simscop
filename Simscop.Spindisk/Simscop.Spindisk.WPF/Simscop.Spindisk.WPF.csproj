@@ -75,6 +75,4 @@
     <Resource Include="Image\temp.jpg" />
     <Resource Include="Image\z.png" />
   </ItemGroup>
-
-  <Import Project="..\..\Simscop.Fake\Simscop.Fake.projitems" Label="Shared" />
 </Project>

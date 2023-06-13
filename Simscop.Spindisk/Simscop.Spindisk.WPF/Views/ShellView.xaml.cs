@@ -10,8 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Simscop.Fake.Spindisk;
+using System.Windows.Shapes; 
 using Simscop.Spindisk.Core.ViewModels;
 using CameraViewModel = Simscop.Spindisk.Core.ViewModels.CameraViewModel;
 

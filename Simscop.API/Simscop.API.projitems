@@ -9,6 +9,7 @@
     <Import_RootNamespace>Simscop.API</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Helper\SerialHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Native\Dhyana\TUCamAPI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dhyana.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XLight.cs" />

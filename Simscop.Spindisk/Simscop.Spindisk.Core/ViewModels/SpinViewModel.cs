@@ -39,9 +39,12 @@ public partial class SpinViewModel : ObservableObject
     /// <param name="value"></param>
     private void Delay(int value = 1)
     {
-        SpinChangeEnable = false;
-        Task.Delay(value * 1000);
-        SpinChangeEnable = true;
+        Task.Run(() =>
+        {
+            SpinChangeEnable = false;
+            Task.Delay(value * 1000); 
+            SpinChangeEnable = true;
+        });
     }
 
     public List<string> ComList { get; set; }

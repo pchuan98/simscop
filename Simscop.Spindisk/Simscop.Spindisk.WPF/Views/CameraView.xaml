@@ -64,14 +64,12 @@
                     <StackPanel Margin="5">
                         <UniformGrid Columns="2">
                             <Grid>
-                                <CheckBox
+                                <Button
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
                                     Command="{Binding ConnectCameraCommand}"
                                     Content="连接相机"
-                                    DockPanel.Dock="Left"
-                                    IsChecked="{Binding IsCameraConnected}"
-                                    Style="{StaticResource CheckBoxAsButton}" />
+                                    DockPanel.Dock="Left" />
 
                                 <Rectangle
                                     Width="12"

@@ -98,8 +98,8 @@ public partial class CameraViewModel : ObservableObject
         GenerateTimer();
 
         // TODO 这里等会要删除了啊
-        DhyanaObject.InitializeSdk();
-        DhyanaObject.InitializeCamera(0);
+        //DhyanaObject.InitializeSdk();
+        //DhyanaObject.InitializeCamera(0);
 
         InitializeValue();
     }
@@ -161,7 +161,6 @@ public partial class CameraViewModel : ObservableObject
                     return;
                 }
 
-                DhyanaObject.InitializeSdk();
                 IsCameraConnected = DhyanaObject.InitializeCamera(0);
 
                 if (!IsCameraConnected) MessageBox.Show("相机链接失败");

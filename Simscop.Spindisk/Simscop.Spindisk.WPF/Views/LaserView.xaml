@@ -1,0 +1,186 @@
+﻿<UserControl
+    x:Class="Simscop.Spindisk.WPF.Views.LaserView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Simscop.Spindisk.WPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel>
+        <TextBlock
+            Margin="20,10,0,10"
+            HorizontalAlignment="Left"
+            FontSize="12"
+            Text="激光通道" />
+
+        <Separator Margin="10,0,10,10" Background="{DynamicResource Region01}" />
+
+        <UniformGrid
+            Height="240"
+            Margin="5"
+            Rows="4">
+            <StackPanel>
+                <TextBlock
+                    Margin="10,0,0,5"
+                    HorizontalAlignment="Left"
+                    FontSize="12"
+                    Text="DAPI-405nm" />
+
+                <Grid Margin="5,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Grid.Column="0">
+                        <Slider
+                            Width="150"
+                            MinWidth="0"
+                            VerticalAlignment="Center"
+                            Maximum="100"
+                            Value="20">
+                            <Slider.Resources>
+                                <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Offset="0" Color="#53aea0" />
+                                    <GradientStop Offset="1" Color="#a3d9cb" />
+                                </LinearGradientBrush>
+                            </Slider.Resources>
+                        </Slider>
+                    </Viewbox>
+
+                    <Label
+                        Grid.Column="1"
+                        Background="#2b2b2b"
+                        Content="20%" />
+
+                    <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
+
+                </Grid>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock
+                    Margin="10,0,0,5"
+                    HorizontalAlignment="Left"
+                    FontSize="12"
+                    Text="FITC-488nm" />
+
+                <Grid Margin="5,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Grid.Column="0">
+                        <Slider
+                            Width="150"
+                            VerticalAlignment="Center"
+                            Maximum="100"
+                            Minimum="0"
+                            Value="45">
+                            <Slider.Resources>
+                                <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Offset="0" Color="#479546" />
+                                    <GradientStop Offset="1" Color="#92d66a" />
+                                </LinearGradientBrush>
+                            </Slider.Resources>
+                        </Slider>
+                    </Viewbox>
+
+                    <Label
+                        Grid.Column="1"
+                        Background="#2b2b2b"
+                        Content="45%" />
+
+                    <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
+
+                </Grid>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock
+                    Margin="10,0,0,5"
+                    HorizontalAlignment="Left"
+                    FontSize="12"
+                    Text="TRITC-562nm" />
+
+                <Grid Margin="5,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Grid.Column="0">
+                        <Slider
+                            Width="150"
+                            MinWidth="0"
+                            VerticalAlignment="Center"
+                            Maximum="100"
+                            Value="30">
+                            <Slider.Resources>
+                                <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Offset="0" Color="#a4251c" />
+                                    <GradientStop Offset="1" Color="#c9716e" />
+                                </LinearGradientBrush>
+                            </Slider.Resources>
+                        </Slider>
+                    </Viewbox>
+
+                    <Label
+                        Grid.Column="1"
+                        Background="#2b2b2b"
+                        Content="30%" />
+
+                    <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
+
+                </Grid>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock
+                    Margin="10,0,0,5"
+                    HorizontalAlignment="Left"
+                    FontSize="12"
+                    Text="CY5-640nm" />
+
+                <Grid Margin="5,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Grid.Column="0">
+                        <Slider
+                            Width="150"
+                            MinWidth="0"
+                            VerticalAlignment="Center"
+                            Maximum="100"
+                            Value="40">
+                            <Slider.Resources>
+                                <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Offset="0" Color="#872083" />
+                                    <GradientStop Offset="1" Color="#876b86" />
+                                </LinearGradientBrush>
+                            </Slider.Resources>
+                        </Slider>
+                    </Viewbox>
+
+                    <Label
+                        Grid.Column="1"
+                        Background="#2b2b2b"
+                        Content="40%" />
+
+                    <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
+
+                </Grid>
+            </StackPanel>
+
+
+        </UniformGrid>
+    </StackPanel>
+</UserControl>

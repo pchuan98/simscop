@@ -1,0 +1,135 @@
+﻿<UserControl
+    x:Class="Simscop.Spindisk.WPF.Views.SpinView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Simscop.Spindisk.WPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <StackPanel>
+
+        <TextBlock
+            Margin="20,10,0,10"
+            HorizontalAlignment="Left"
+            FontSize="12"
+            Text="转盘控制" />
+
+        <Separator Margin="10,0,10,10" Background="{DynamicResource Region01}" />
+
+
+        <DockPanel Height="35" Margin="10,5">
+            <CheckBox
+                Width="80"
+                Margin="10,0,0,0"
+                Padding="0"
+                Content="O 连接"
+                DockPanel.Dock="Right"
+                Style="{StaticResource CheckBoxAsButton}" />
+
+            <Viewbox>
+                <ComboBox
+                    Width="160"
+                    ItemsSource="{Binding ComList}"
+                    SelectedIndex="{Binding SpiningIndex}" />
+            </Viewbox>
+        </DockPanel>
+
+        <UniformGrid
+            Height="30"
+            Margin="10,5"
+            Columns="2">
+            <Button
+                Margin="0,0,5,0"
+                Padding="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Content="复位"
+                FontSize="14" />
+
+            <CheckBox
+                Margin="5,0,0,0"
+                Padding="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Content="开启"
+                FontSize="13"
+                Style="{StaticResource CheckBoxAsButton}" />
+
+        </UniformGrid>
+
+        <Separator Margin="10,5" Background="{DynamicResource BorderBrush02}" />
+
+        <DockPanel Margin="5,2,0,0">
+            <TextBlock
+                Width="50"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Text="Spining"
+                TextAlignment="Left" />
+
+            <Viewbox Height="35" Margin="0,2">
+                <ComboBox
+                    Width="170"
+                    ItemsSource="{Binding Spining}"
+                    SelectedIndex="{Binding SpiningIndex}" />
+            </Viewbox>
+        </DockPanel>
+
+
+        <DockPanel Margin="5,2,0,0">
+            <TextBlock
+                Width="50"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Text="Dichroic"
+                TextAlignment="Left" />
+
+            <Viewbox Height="35" Margin="0,2">
+                <ComboBox
+                    Width="170"
+                    ItemsSource="{Binding Dichroic}"
+                    SelectedIndex="{Binding DichroicIndex}" />
+            </Viewbox>
+        </DockPanel>
+
+        <DockPanel Margin="5,2,0,0">
+            <TextBlock
+                Width="50"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Text="Emission"
+                TextAlignment="Left" />
+
+            <Viewbox Height="35" Margin="0,2">
+                <ComboBox
+                    Width="170"
+                    ItemsSource="{Binding Emission}"
+                    SelectedIndex="{Binding EmissionIndex}" />
+            </Viewbox>
+        </DockPanel>
+
+        <DockPanel Margin="5,2,0,0">
+            <TextBlock
+                Width="50"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Text="Emission"
+                TextAlignment="Left" />
+
+            <Viewbox Height="35" Margin="0,2">
+                <ComboBox
+                    Width="170"
+                    ItemsSource="{Binding Excitation}"
+                    SelectedIndex="{Binding ExcitationIndex}" />
+            </Viewbox>
+        </DockPanel>
+    </StackPanel>
+</UserControl>

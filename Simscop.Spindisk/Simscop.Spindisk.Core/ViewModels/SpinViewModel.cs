@@ -58,7 +58,7 @@ public partial class SpinViewModel : ObservableObject
     [RelayCommand]
     void ConnectCom()
     {
-        if (IsConnected) IsConnected = XLight.Connect(ComName);
+        if (!IsConnected) IsConnected = XLight.Connect(ComName);
         else XLight.Disconnect();
 
     }

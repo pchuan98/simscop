@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Text;
 using System.IO.Ports;
 using System.Linq.Expressions;
@@ -97,19 +98,20 @@ public static class XLight
     /// <exception cref="Exception"></exception>
     public static bool Connect(string port)
     {
-        _serial = new SerialPort()
-        {
-            PortName = port,
-            BaudRate = 9600,
-            DataBits = 8,
-            StopBits = StopBits.One,
-            Parity = Parity.None
-        };
-
         try
         {
+            _serial = new SerialPort()
+            {
+                PortName = port,
+                BaudRate = 9600,
+                DataBits = 8,
+                StopBits = StopBits.One,
+                Parity = Parity.None
+            };
             if (!_serial.IsOpen)
                 _serial.Open();
+
+            Debug.WriteLine("[XXX] Serial Connected Success");
 
             return _serial.IsOpen;
         }
@@ -134,6 +136,9 @@ public static class XLight
         {
             FlagD = value <= 1 ? value : 0;
             _serial?.Write($"D{FlagN}\r");
+
+            Debug.WriteLine("[XXX] Spining Write Success");
+
         }
         catch (Exception e)
         {

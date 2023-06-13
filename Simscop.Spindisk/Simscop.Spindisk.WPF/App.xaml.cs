@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using Simscop.Fake.Spindisk;
 using Simscop.Spindisk.WPF.Views;
 
 namespace Simscop.Spindisk.WPF
@@ -17,26 +18,26 @@ namespace Simscop.Spindisk.WPF
     {
         public App()
         {
-            
+
         }
 
         protected override void OnActivated(EventArgs e)
         {
-            
+
         }
 
         protected override void OnLoadCompleted(NavigationEventArgs e)
         {
- 
+
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             var view = new ShellView()
             {
-                 
+                //DataContext = new Core.ViewModels.CameraViewModel()
             };
-          
+
             view.Show();
         }
     }

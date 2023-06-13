@@ -58,6 +58,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Image\blue.jpg" />
     <Resource Include="Image\camera.png" />
     <Resource Include="Image\green.jpg" />

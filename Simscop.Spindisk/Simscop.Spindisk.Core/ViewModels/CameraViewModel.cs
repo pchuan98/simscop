@@ -66,22 +66,26 @@ public partial class CameraViewModel : ObservableObject
 
     #region Timer
 
+    private static double GlobalTimerPeriod = DefaultFrameInterval + 100;
+
     /// <summary>
     /// 获取frame的定时器
     /// </summary>
     private readonly DispatcherTimer _frameTimer = new()
     {
-        Interval = TimeSpan.FromMilliseconds(DefaultFrameInterval),
+        Interval = TimeSpan.FromMilliseconds(GlobalTimerPeriod),
     };
 
     void GenerateTimer()
     {
         _frameTimer.Tick += (s, m) =>
         {
-            var display = new DisplayFrame();
-            DhyanaObject.GetCurrentFrame((int)(Exposure + 100.0));
-            if (Frame2Bytes(ref display, DhyanaObject.CurrentFrame))
-                WeakReferenceMessenger.Default.Send<DisplayFrame, string>(display, "Display");
+            Task.Run(() => {
+                var display = new DisplayFrame();
+                DhyanaObject.GetCurrentFrame((int)(GlobalTimerPeriod));
+                if (Frame2Bytes(ref display, DhyanaObject.CurrentFrame))
+                    WeakReferenceMessenger.Default.Send<DisplayFrame, string>(display, "Display");
+            });
         };
     }
 
@@ -91,12 +95,13 @@ public partial class CameraViewModel : ObservableObject
 
     public CameraViewModel()
     {
-        //GenerateTimer();
+        GenerateTimer();
 
+        // TODO 这里等会要删除了啊
         //DhyanaObject.InitializeSdk();
         //DhyanaObject.InitializeCamera(0);
 
-        //InitializeValue();
+        InitializeValue();
     }
 
     ~CameraViewModel()
@@ -140,7 +145,7 @@ public partial class CameraViewModel : ObservableObject
     //TODO 这里之后要记得写一个控件，在True和False之间切换会有图像切换
 
     [ObservableProperty]
-    private bool _isConnectedCamera = false;
+    private bool _isCameraConnected = false;
 
 
     [RelayCommand]
@@ -148,15 +153,27 @@ public partial class CameraViewModel : ObservableObject
     {
         await Task.Run(() =>
         {
-            if (!IsConnectedCamera)
+            if (!IsCameraConnected)
             {
-                IsConnectedCamera = DhyanaObject.InitializeCamera(0);
-                IsHistc = true;
+                if (!DhyanaObject.InitializeSdk())
+                {
+                    MessageBox.Show("初始化失败");
+                    return;
+                }
 
+                IsCameraConnected = DhyanaObject.InitializeCamera(0);
+
+                if (!IsCameraConnected) MessageBox.Show("相机链接失败");
+
+                IsHistc = true;
             }
 
             else
+            {
                 DhyanaObject.UnInitializeCamera();
+                DhyanaObject.UninitializeSdk();
+            }
+                
         });
     }
 
@@ -171,15 +188,9 @@ public partial class CameraViewModel : ObservableObject
     [RelayCommand]
     void CaptureFrame()
     {
-        if (IsCapture) StartCapture();
+        if (!IsCapture) StartCapture();
         else StopCapture();
     }
-
-    [ObservableProperty]
-    private double _frameTimerInterval = DefaultFrameInterval;
-
-    partial void OnFrameTimerIntervalChanged(double value)
-        => _frameTimer.Interval = TimeSpan.FromMilliseconds(FrameTimerInterval);
 
     /// <summary>
     /// 开始捕获屏幕
@@ -189,6 +200,7 @@ public partial class CameraViewModel : ObservableObject
         if (IsCapture) return;
 
         IsCapture = true;
+        InitalizeExposure();
         DhyanaObject.StartCapture();
 
         _frameTimer.Start();
@@ -215,6 +227,9 @@ public partial class CameraViewModel : ObservableObject
     /// <returns></returns>
     private bool Frame2Bytes(ref DisplayFrame display, TUCAM_FRAME frame)
     {
+
+        // HACK 这里修改Roi的时候会因为未知原因导致一个无法确定的CLR错误
+        // 我的预估是ROI设置导致了某些尺寸没修改导致的
         try
         {
             int width = frame.usWidth;
@@ -253,6 +268,9 @@ public partial class CameraViewModel : ObservableObject
 
     partial void OnExposureChanged(double value)
     {
+        GlobalTimerPeriod = value + 100;
+        _frameTimer.Interval = TimeSpan.FromMilliseconds(GlobalTimerPeriod);
+
         if (!IsAutoExposure)
         {
             DhyanaObject.SetExposure(value);
@@ -350,7 +368,7 @@ public partial class CameraViewModel : ObservableObject
 
     public List<string> RoiMode => new List<string>()
     {
-        "UnSet","2048 X 2048","1024 X 1024","512 X 512","256 X 256","128 X 128"
+        "UnSet","1024 X 1024","512 X 512","256 X 256","128 X 128"
     };
 
 
@@ -370,8 +388,8 @@ public partial class CameraViewModel : ObservableObject
                     break;
 
                 default:
-                    var width = 2048 / (int)Math.Pow(2, value - 1);
-                    var height = 2048 / (int)Math.Pow(2, value - 1);
+                    var width = 1024 / (int)Math.Pow(2, value - 1);
+                    var height = 1024 / (int)Math.Pow(2, value - 1);
                     DhyanaObject.SetRoi(width, height, 0, 0);
                     break;
             }
@@ -387,8 +405,7 @@ public partial class CameraViewModel : ObservableObject
             RoiEnabled = attr.bEnable;
         });
 
-
-    // TODO 这里的逻辑还有一丢丢问题
+    
     [ObservableProperty]
     private bool _roiEnabled = false;
 
@@ -396,7 +413,7 @@ public partial class CameraViewModel : ObservableObject
     void SetRoi()
         => RefreshCapture(() =>
         {
-            if (RoiEnabled) DhyanaObject.UnSetRoi();
+            if (!RoiEnabled) DhyanaObject.UnSetRoi();
             else
             {
                 RoiModeIndex = 0;

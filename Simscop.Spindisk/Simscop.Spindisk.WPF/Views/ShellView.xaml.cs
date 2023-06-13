@@ -22,9 +22,9 @@ namespace Simscop.Spindisk.WPF.Views
     /// </summary>
     public partial class ShellView : Window
     {
-        private Fake.Spindisk.CameraViewModel cameraVM;
+        private CameraViewModel cameraVM;
         private SpinViewModel spinVM;
-        private Fake.Spindisk.SpinViewModel shellVM;
+        private ShellViewModel shellVM;
 
 
         public ShellView()

@@ -90,12 +90,6 @@ public partial class CameraViewModel : ObservableObject
 
     public CameraViewModel()
     {
-        if (!DhyanaObject.InitializeSdk())
-        {
-            MessageBox.Show("初始化SDK出错");
-            throw new NotSupportedException();
-        }
-
         _frameTimer.Tick += (s, m) =>
         {
             Task.Run(() =>
@@ -260,10 +254,17 @@ public partial class CameraViewModel : ObservableObject
     void ConnectCamera()
     {
         CameraConnecting = false;
-        CameraFlag = false;
 
         if (CameraFlag)
         {
+            CameraFlag = false;
+
+            if (!DhyanaObject.InitializeSdk())
+            {
+                MessageBox.Show("初始化SDK出错");
+                throw new NotSupportedException();
+            }
+
             CameraConnected = DhyanaObject.InitializeCamera(0);
             CameraFlag = CameraConnected;
 

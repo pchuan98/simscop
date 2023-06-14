@@ -73,7 +73,7 @@ public partial class CameraViewModel : ObservableObject
     {
         if (!(value > 10)) return;
 
-        _frameTimer.Interval = TimeSpan.FromMilliseconds(value);
+        _frameTimer.Interval = TimeSpan.FromMilliseconds(value+ PeriodSurplus);
         _levelTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
     }
 
@@ -272,6 +272,9 @@ public partial class CameraViewModel : ObservableObject
 
         else
         {
+            if (IsCapture) IsCapture = false;
+
+
             DhyanaObject.UnInitializeCamera();
             DhyanaObject.UninitializeSdk();
 

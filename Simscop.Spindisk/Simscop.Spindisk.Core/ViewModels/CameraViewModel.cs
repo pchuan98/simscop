@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Dynamic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,12 +11,6 @@ using Simscop.API;
 
 using DhyanaObject = Simscop.API.Dhyana;
 using Simscop.API.Native;
-
-using System.Text.RegularExpressions;
-using System.Windows.Automation;
-using System.Windows.Documents;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace Simscop.Spindisk.Core.ViewModels;
@@ -63,9 +52,9 @@ public partial class CameraViewModel : ObservableObject
 {
     private const double DefaultFrameInterval = 200;
 
-    private const double PeriodSurplus = 5;
+    private const double PeriodSurplus = 50;
 
-    private const int AutoExposureInterval = 500;
+    private const int AutoExposureInterval = 50;
 
     [ObservableProperty]
     private double _globalTimerPeriod = DefaultFrameInterval + PeriodSurplus;
@@ -74,7 +63,7 @@ public partial class CameraViewModel : ObservableObject
     {
         if (!(value > 10)) return;
 
-        _frameTimer.Interval = TimeSpan.FromMilliseconds(value+ PeriodSurplus);
+        _frameTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
         //_levelTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
     }
 

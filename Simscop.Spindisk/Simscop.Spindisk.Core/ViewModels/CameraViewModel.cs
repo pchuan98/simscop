@@ -252,36 +252,43 @@ public partial class CameraViewModel : ObservableObject
     [RelayCommand]
     void ConnectCamera()
     {
-        CameraConnecting = false;
-
-        if (CameraFlag)
+        Task.Run(() =>
         {
+            CameraConnecting = false;
 
-            if (!DhyanaObject.InitializeSdk())
+            if (CameraFlag)
             {
-                MessageBox.Show("初始化SDK出错");
-                throw new NotSupportedException();
+
+                if (!DhyanaObject.InitializeSdk())
+                {
+                    MessageBox.Show("初始化SDK出错");
+                    throw new NotSupportedException();
+                }
+
+                CameraConnected = DhyanaObject.InitializeCamera(0);
+                CameraFlag = CameraConnected;
+
+                if (!CameraConnected) MessageBox.Show("相机链接失败");
+                else AutoLoadOnCameraConnected();
             }
 
-            CameraConnected = DhyanaObject.InitializeCamera(0);
-            CameraFlag = CameraConnected;
-
-            if (!CameraConnected) MessageBox.Show("相机链接失败");
-            else AutoLoadOnCameraConnected();
-        }
-
-        else
-        {
-            if (IsCapture) IsCapture = false;
+            else
+            {
+                if (IsCapture)
+                {
+                    IsCapture = false;
+                    StopCapture();
+                }
 
 
-            DhyanaObject.UnInitializeCamera();
-            DhyanaObject.UninitializeSdk();
+                DhyanaObject.UnInitializeCamera();
+                DhyanaObject.UninitializeSdk();
 
-            CameraConnected = false;
-        }
+                CameraConnected = false;
+            }
 
-        CameraConnecting = true;
+            CameraConnecting = true;
+        });
     }
 
 
@@ -564,13 +571,12 @@ public partial class CameraViewModel : ObservableObject
     }
 
 
-
     /// <summary>
     /// 是否开启直方统计 这个默认每次启动相机都去启动
     /// 
     /// </summary>
     [ObservableProperty]
-    private bool _isHistc = true;
+    private bool _isHistc = false;
 
     partial void OnIsHistcChanged(bool value) => DhyanaObject.SetHistc(value);
 

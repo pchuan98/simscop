@@ -366,6 +366,8 @@ public partial class CameraViewModel : ObservableObject
         // 我的预估是ROI设置导致了某些尺寸没修改导致的
         try
         {
+            if (frame.pBuffer == IntPtr.Zero) return false;
+
             int width = frame.usWidth;
             int height = frame.usHeight;
             int stride = (int)frame.uiWidthStep;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,14 +98,17 @@ public partial class SpinViewModel : ObservableObject
     void SetDisk()
     {
         // TODO 这里之后要修改成为从串口获取实时数据来抉择是否完成后面的任务
-        if (XLight.FlagD == 0) SpiningIndex = 1;
-
-        if (DiskEnable) XLight.SetDichroic(1);
-        else XLight.SetDisk(0);
-
-        DelaySpinViewEnabled(2);
-
-        DiskEnable = !DiskEnable;
+        try
+        {
+            if (XLight.FlagD == 0) SpiningIndex = 1;
+            XLight.SetDisk(DiskEnable ? (uint)1 : (uint)0);
+            DelaySpinViewEnabled(2);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+            DiskEnable=false;
+        }
     }
 
     #region Spining
@@ -120,7 +124,7 @@ public partial class SpinViewModel : ObservableObject
     partial void OnSpiningIndexChanged(uint value)
     {
         XLight.SetSpining(value);
-        DelaySpinViewEnabled(8);
+        DelaySpinViewEnabled(4);
     }
 
     #endregion

@@ -11,7 +11,7 @@
     MinWidth="1400"
     MinHeight="800"
     Style="{StaticResource BlankWindow}"
-    Topmost="False"
+    Topmost="True"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -29,37 +29,9 @@
             Orientation="Horizontal"
             WindowChrome.IsHitTestVisibleInChrome="True">
 
-            <StackPanel Margin="20,0,30,0" Orientation="Horizontal">
-                <StackPanel.Resources>
-                    <!--  可选字体  Impact // Cooper Black // Blackoak Std  -->
-                    <FontFamily x:Key="TitleFontFamily">Impact</FontFamily>
-                    <sys:Double x:Key="TitleFontSize">25</sys:Double>
-                </StackPanel.Resources>
-                <TextBlock
-                    FontFamily="{StaticResource TitleFontFamily}"
-                    FontSize="{StaticResource TitleFontSize}"
-                    FontWeight="UltraBold"
-                    Text="SIM" />
-                <TextBlock
-                    FontFamily="{StaticResource TitleFontFamily}"
-                    FontSize="{StaticResource TitleFontSize}"
-                    FontWeight="UltraBold"
-                    Text="SCOP"
-                    Visibility="Visible">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Offset="0" Color="#5355b9" />
-                            <GradientStop Offset="0.14" Color="#4e8deb" />
-                            <GradientStop Offset="0.28" Color="#63b4c9" />
-                            <GradientStop Offset="0.42" Color="#77c68a" />
-                            <GradientStop Offset="0.56" Color="#81bf59" />
-                            <GradientStop Offset="0.7" Color="#f6db51" />
-                            <GradientStop Offset="0.84" Color="#eb9a3c" />
-                            <GradientStop Offset="1" Color="#e34626" />
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-            </StackPanel>
+            <Viewbox Margin="20,5,30,5">
+                <Image Source="../Image/logo.png" />
+            </Viewbox>
 
             <TextBlock Margin="10,0" Text="打开" />
             <Button
@@ -228,7 +200,7 @@
                     Background="{DynamicResource Region01}"
                     CornerRadius="10">
                     <Viewbox>
-                        <Image Source="{Binding ImageFirst}"  Width="400"/>
+                        <Image Width="400" Source="{Binding ImageFirst}" />
                     </Viewbox>
                 </Border>
 
@@ -238,7 +210,7 @@
                     Background="{DynamicResource Region01}"
                     CornerRadius="10">
                     <Grid>
-                        <Image Source="/Image/blue.jpg" Width="400"/>
+                        <Image Width="400" Source="/Image/blue.jpg" />
                     </Grid>
                 </Border>
 
@@ -248,7 +220,7 @@
                     Background="{DynamicResource Region01}"
                     CornerRadius="10">
                     <Grid>
-                        <Image Source="/Image/red.jpg" Width="400"/>
+                        <Image Width="400" Source="/Image/red.jpg" />
                     </Grid>
                 </Border>
 
@@ -258,7 +230,7 @@
                     Background="{DynamicResource Region01}"
                     CornerRadius="10">
                     <Grid>
-                        <Image Source="/Image/remix.jpg" Width="400"/>
+                        <Image Width="400" Source="/Image/remix.jpg" />
                     </Grid>
                 </Border>
             </UniformGrid>

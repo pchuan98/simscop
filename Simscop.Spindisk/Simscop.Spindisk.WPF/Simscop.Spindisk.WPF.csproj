@@ -23,6 +23,7 @@
     <None Remove="Image\blue.jpg" />
     <None Remove="Image\camera.png" />
     <None Remove="Image\green.jpg" />
+    <None Remove="Image\logo.png" />
     <None Remove="Image\not_select.png" />
     <None Remove="Image\red.jpg" />
     <None Remove="Image\remix.jpg" />
@@ -34,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Image\logo.png" />
     <Resource Include="Image\red.jpg" />
     <Resource Include="Image\remix.jpg" />
   </ItemGroup>

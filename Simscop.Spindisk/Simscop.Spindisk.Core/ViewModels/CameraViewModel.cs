@@ -52,7 +52,7 @@ public partial class CameraViewModel : ObservableObject
 {
     private const double DefaultFrameInterval = 200;
 
-    private const double PeriodSurplus = 50;
+    private const double PeriodSurplus = 10;
 
     private const int AutoExposureInterval = 50;
 
@@ -175,13 +175,13 @@ public partial class CameraViewModel : ObservableObject
     {
         DhyanaObject.SetHistc(true);
 
-        DhyanaObject.SetAutolevels(3);
+        DhyanaObject.SetAutolevels();
         IsAutoRightLevel = true;
         IsAutoLeftLevel = true;
 
         IsAutoExposure = true;
 
-        if (DhyanaObject.GetGamma(out double gamma)) Gamma = gamma;
+        if (DhyanaObject.GetGamma(out var gamma)) Gamma = gamma;
         if(DhyanaObject.GetContrast(out var contrast)) Contrast=contrast;
 
 
@@ -461,11 +461,9 @@ public partial class CameraViewModel : ObservableObject
             {
                 double val = -1;
                 DhyanaObject.GetExposure(ref val);
-
+                GlobalTimerPeriod = val;
                 Exposure = val;
-                ExposureModel.Exposure = val;
-
-                Task.Delay(AutoExposureInterval).Wait();
+                Task.Delay(AutoExposureInterval);
             }
         });
     }
@@ -487,7 +485,7 @@ public partial class CameraViewModel : ObservableObject
                 DhyanaObject.GetExposure(ref newValue);
 
                 Exposure = newValue;
-                ExposureModel.Exposure = newValue;
+                //ExposureModel.Exposure = newValue;
 
                 Task.Delay(3000);
 
@@ -588,7 +586,7 @@ public partial class CameraViewModel : ObservableObject
     /// 
     /// </summary>
     [ObservableProperty]
-    private bool _isHistc = false;
+    private bool _isHistc = true;
 
     partial void OnIsHistcChanged(bool value) => DhyanaObject.SetHistc(value);
 
@@ -596,7 +594,7 @@ public partial class CameraViewModel : ObservableObject
     ///
     /// </summary>
     [ObservableProperty]
-    private bool _isAutoLeftLevel = false;
+    private bool _isAutoLeftLevel = true;
 
     partial void OnIsAutoLeftLevelChanged(bool value) => OnAutoLevelChanged();
 
@@ -605,7 +603,7 @@ public partial class CameraViewModel : ObservableObject
     /// </summary>
     [ObservableProperty]
 
-    private bool _isAutoRightLevel = false;
+    private bool _isAutoRightLevel = true;
 
     partial void OnIsAutoRightLevelChanged(bool value) => OnAutoLevelChanged();
 

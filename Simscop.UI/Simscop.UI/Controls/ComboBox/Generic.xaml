@@ -198,7 +198,7 @@
         <Setter Property="ScrollViewer.PanningMode" Value="Both" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="Template" Value="{StaticResource BaseComboBoxTemplate}" />
- 
+
     </Style>
 
 </ResourceDictionary>

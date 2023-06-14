@@ -137,7 +137,7 @@ public static class XLight
         try
         {
             FlagD = value <= 1 ? value : 0;
-            _serial?.Write($"D{FlagN}\r");
+            _serial?.Write($"D{FlagD}\r");
 
             Debug.WriteLine("[XXX] Spining Write Success");
 

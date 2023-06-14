@@ -177,12 +177,11 @@ public partial class CameraViewModel : ObservableObject
     void AutoLoadOnCameraConnected()
     {
         IsHistc = true;
-        IsAutoExposure = true;
     }
 
     void AutoLoadOnCapture()
     {
-
+        IsAutoExposure = true;
         IsAutoRightLevel = true;
         IsAutoLeftLevel = true;
     }
@@ -436,7 +435,7 @@ public partial class CameraViewModel : ObservableObject
 
         Task.Run(() =>
         {
-            while (IsAutoExposure)
+            while (IsAutoExposure && IsCapture)
             {
                 double val = -1;
                 DhyanaObject.GetExposure(ref val);

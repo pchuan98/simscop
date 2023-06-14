@@ -41,7 +41,7 @@ public partial class SpinViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private bool _spinControlEnabled = true;
+    private bool _spinControlEnabled = false;
 
     public List<string> ComList { get; set; }
 
@@ -113,7 +113,7 @@ public partial class SpinViewModel : ObservableObject
         catch (Exception e)
         {
             Debug.WriteLine(e);
-            DiskEnable=false;
+            DiskEnable = false;
         }
     }
 
@@ -145,7 +145,7 @@ public partial class SpinViewModel : ObservableObject
     [ObservableProperty]
     private uint _dichroicIndex = 0;
 
-    partial void OnDichroicIndexChanged(uint value)=> XLight.SetDichroic(value);
+    partial void OnDichroicIndexChanged(uint value) => XLight.SetDichroic(value + 1);
 
     #endregion
 
@@ -159,7 +159,7 @@ public partial class SpinViewModel : ObservableObject
     [ObservableProperty]
     private uint _emissionIndex = 0;
 
-    partial void OnEmissionIndexChanged(uint value)=> XLight.SetEmission(value);
+    partial void OnEmissionIndexChanged(uint value) => XLight.SetEmission(value + 1);
 
     #endregion
 
@@ -173,7 +173,7 @@ public partial class SpinViewModel : ObservableObject
     [ObservableProperty]
     private uint _excitationIndex = 0;
 
-    partial void OnExcitationIndexChanged(uint value)=> XLight.SetExcitation(value);
+    partial void OnExcitationIndexChanged(uint value) => XLight.SetExcitation(value + 1);
 
     #endregion
 }

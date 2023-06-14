@@ -74,7 +74,7 @@ public partial class CameraViewModel : ObservableObject
         _levelTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
     }
 
-    private static DispatcherPriority FrameTimerPriority 
+    private static DispatcherPriority FrameTimerPriority
         => DispatcherPriority.Render;
 
     /// <summary>
@@ -105,6 +105,8 @@ public partial class CameraViewModel : ObservableObject
         {
             Task.Run(() =>
             {
+                if (!IsAutoLeftLevel && !IsAutoRightLevel) _levelTimer.Stop();
+
                 if (IsAutoLeftLevel)
                 {
                     DhyanaObject.GetLeftLevels(out var lv);
@@ -172,7 +174,7 @@ public partial class CameraViewModel : ObservableObject
     void AutoLoadOnCameraConnected()
     {
         IsHistc = true;
-        IsAutoExposure=true;
+        IsAutoExposure = true;
         IsAutoRightLevel = true;
         IsAutoLeftLevel = true;
     }
@@ -223,15 +225,15 @@ public partial class CameraViewModel : ObservableObject
         switch (CameraConnected)
         {
             case false:
-                await ConnectCamera();
+                ConnectCamera();
                 CaptureFrame();
                 break;
             case true when !IsCapture:
                 CaptureFrame();
                 break;
             default:
-                CaptureFrame();
-                await ConnectCamera();
+                CaptureFrame(); 
+                ConnectCamera();
                 break;
         }
     }
@@ -241,32 +243,34 @@ public partial class CameraViewModel : ObservableObject
     //TODO 这里之后要记得写一个控件，在True和False之间切换会有图像切换
 
     [RelayCommand]
-    async Task ConnectCamera()
+    void ConnectCamera()
     {
-        await Task.Run(() =>
-        {
-            CameraConnecting = false;
-            if (CameraConnected)
-            {
-                if (!DhyanaObject.InitializeSdk())
-                {
-                    MessageBox.Show("初始化失败");
-                    return;
-                }
-                CameraConnected = DhyanaObject.InitializeCamera(0);
-                if (!CameraConnected) MessageBox.Show("相机链接失败");
+        Task.Run(() =>
+       {
+           CameraConnecting = false;
+           if (CameraConnected)
+           {
+               if (!DhyanaObject.InitializeSdk())
+               {
+                   MessageBox.Show("初始化失败");
+                   return;
+               }
+               CameraConnected = DhyanaObject.InitializeCamera(0);
+               if (!CameraConnected) MessageBox.Show("相机链接失败");
 
-                AutoLoadOnCameraConnected();
-            }
+               AutoLoadOnCameraConnected();
+           }
 
-            else
-            {
-                DhyanaObject.UnInitializeCamera();
-                DhyanaObject.UninitializeSdk();
-            }
-            CameraConnecting = true;
-        });
+           else
+           {
+               DhyanaObject.UnInitializeCamera();
+               DhyanaObject.UninitializeSdk();
+           }
+           CameraConnecting = true;
+       });
     }
+
+
 
     #endregion
 
@@ -294,6 +298,7 @@ public partial class CameraViewModel : ObservableObject
             DhyanaObject.StartCapture();
 
             _frameTimer.Start();
+            _levelTimer.Start();
             AutoLoadOnCapture();
         }
         catch (Exception e)
@@ -311,6 +316,7 @@ public partial class CameraViewModel : ObservableObject
         try
         {
             _frameTimer.Stop();
+            _levelTimer.Stop();
             DhyanaObject.StopCapture();
         }
         catch (Exception e)
@@ -541,7 +547,7 @@ public partial class CameraViewModel : ObservableObject
                 break;
         }
 
-        if(!IsAutoLeftLevel&&!IsAutoRightLevel) _levelTimer.Stop();
+        if (!IsAutoLeftLevel && !IsAutoRightLevel) _levelTimer.Stop();
         else _levelTimer.Start();
     }
 

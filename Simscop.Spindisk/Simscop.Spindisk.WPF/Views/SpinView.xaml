@@ -9,7 +9,7 @@
     d:DataContext="{d:DesignInstance vm:SpinViewModel}"
     mc:Ignorable="d">
 
-    <StackPanel>
+    <StackPanel IsEnabled="{Binding SpinViewEnabled}">
 
         <TextBlock
             Margin="20,10,0,10"

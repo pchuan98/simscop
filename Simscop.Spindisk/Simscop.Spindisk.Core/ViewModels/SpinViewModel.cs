@@ -62,7 +62,7 @@ public partial class SpinViewModel : ObservableObject
         IsConnectting = false;
         try
         {
-            if (!IsConnected)
+            if (IsConnected)
                 IsConnected = XLight.Connect(ComName);
             else
             {

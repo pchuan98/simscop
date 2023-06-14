@@ -126,7 +126,11 @@ public static class XLight
     /// <summary>
     /// 解开COM端口
     /// </summary>
-    public static void Disconnect() => _serial?.Close();
+    public static void Disconnect()
+    {
+        _serial?.Close();
+        _serial = null;
+    }
 
     /// <summary>
     /// 

@@ -88,7 +88,13 @@ public partial class SpinViewModel : ObservableObject
     void Reset()
     {
         XLight.Reset();
-        DelaySpinViewEnabled(SpiningIndex == 1 ? 10 : 5);
+        DelaySpinViewEnabled(SpiningIndex == 1 ? 6 : 3);
+
+        SpiningIndex = 0;
+        DiskEnable = false;
+        DichroicIndex = 0;
+        EmissionIndex = 0;
+        ExcitationIndex = 0;
     }
 
     [ObservableProperty]
@@ -139,11 +145,7 @@ public partial class SpinViewModel : ObservableObject
     [ObservableProperty]
     private uint _dichroicIndex = 0;
 
-    partial void OnDichroicIndexChanged(uint value)
-    {
-        XLight.SetDichroic(value);
-        DelaySpinViewEnabled(3);
-    }
+    partial void OnDichroicIndexChanged(uint value)=> XLight.SetDichroic(value);
 
     #endregion
 
@@ -157,12 +159,7 @@ public partial class SpinViewModel : ObservableObject
     [ObservableProperty]
     private uint _emissionIndex = 0;
 
-    partial void OnEmissionIndexChanged(uint value)
-    {
-        XLight.SetEmission(value); 
-        DelaySpinViewEnabled(3);
-
-    }
+    partial void OnEmissionIndexChanged(uint value)=> XLight.SetEmission(value);
 
     #endregion
 
@@ -176,11 +173,7 @@ public partial class SpinViewModel : ObservableObject
     [ObservableProperty]
     private uint _excitationIndex = 0;
 
-    partial void OnExcitationIndexChanged(uint value)
-    {
-        XLight.SetExcitation(value);
-        DelaySpinViewEnabled(3);
-    }
+    partial void OnExcitationIndexChanged(uint value)=> XLight.SetExcitation(value);
 
     #endregion
 }

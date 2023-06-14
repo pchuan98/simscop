@@ -75,7 +75,7 @@ public partial class CameraViewModel : ObservableObject
         if (!(value > 10)) return;
 
         _frameTimer.Interval = TimeSpan.FromMilliseconds(value+ PeriodSurplus);
-        _levelTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
+        //_levelTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
     }
 
     private static DispatcherPriority FrameTimerPriority
@@ -89,7 +89,10 @@ public partial class CameraViewModel : ObservableObject
     /// <summary>
     /// 色阶使用自动初始化器，但是因为显示问题，他的所有值更改应该依据Frame更改来驱动
     /// </summary>
-    private readonly DispatcherTimer _levelTimer = new(priority: FrameTimerPriority);
+    private readonly DispatcherTimer _levelTimer = new(priority: FrameTimerPriority)
+    {
+        Interval = TimeSpan.FromMilliseconds(1000)
+    };
 
     public CameraViewModel()
     {
@@ -181,10 +184,10 @@ public partial class CameraViewModel : ObservableObject
 
     void AutoLoadOnCapture()
     {
-        IsHistc = true;
-        IsAutoExposure = true;
-        IsAutoRightLevel = true;
-        IsAutoLeftLevel = true;
+        //IsHistc = true;
+        //IsAutoExposure = true;
+        //IsAutoRightLevel = true;
+        //IsAutoLeftLevel = true;
     }
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();

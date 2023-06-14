@@ -65,7 +65,7 @@ public partial class CameraViewModel : ObservableObject
 
     private const double PeriodSurplus = 5;
 
-    private const int AutoExposureInterval = 5000;
+    private const int AutoExposureInterval = 500;
 
     [ObservableProperty]
     private double _globalTimerPeriod = DefaultFrameInterval + PeriodSurplus;
@@ -122,7 +122,7 @@ public partial class CameraViewModel : ObservableObject
 
                 if (IsAutoRightLevel)
                 {
-                    DhyanaObject.GetLeftLevels(out var rv);
+                    DhyanaObject.GetRightLevels(out var rv);
                     RightLevel = rv;
                 }
             });
@@ -188,8 +188,14 @@ public partial class CameraViewModel : ObservableObject
         DhyanaObject.SetAutolevels(0);
 
         IsAutoExposure = true;
-        //IsAutoRightLevel = true;
-        //IsAutoLeftLevel = true;
+
+        if (DhyanaObject.GetGamma(out double gamma)) Gamma = gamma;
+        
+        if(DhyanaObject.GetContrast(out var contrast)) Contrast=contrast;
+
+
+        IsAutoRightLevel = true;
+        IsAutoLeftLevel = true;
     }
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();
@@ -717,15 +723,15 @@ public partial class CameraViewModel : ObservableObject
         => SetValueWithCapture(() => DhyanaObject.SetImageMode(ImageMode));
 
     [ObservableProperty]
-    private int _gamma = 0;
+    private double _gamma = 0;
 
-    partial void OnGammaChanged(int value)
+    partial void OnGammaChanged(double value)
         => SetValueWithCapture(() => DhyanaObject.SetGamma(Gamma));
 
     [ObservableProperty]
-    private int _contrast = 0;
+    private double _contrast = 0;
 
-    partial void OnContrastChanged(int value)
+    partial void OnContrastChanged(double value)
         => SetValueWithCapture(() => DhyanaObject.SetContrast(Contrast));
     #endregion
 

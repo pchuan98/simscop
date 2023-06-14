@@ -176,8 +176,6 @@ public partial class CameraViewModel : ObservableObject
     {
         IsHistc = true;
         IsAutoExposure = true;
-        IsAutoRightLevel = true;
-        IsAutoLeftLevel = true;
     }
 
     void AutoLoadOnCapture()

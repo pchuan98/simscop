@@ -58,40 +58,9 @@ namespace Simscop.Spindisk.Core.ViewModels;
 
 public partial class CameraViewModel : ObservableObject
 {
-    #region Constant
-
     private const double DefaultFrameInterval = 200;
 
-    #endregion
-
-    #region Timer
-
-    private static double GlobalTimerPeriod = DefaultFrameInterval + 100;
-
-    /// <summary>
-    /// 获取frame的定时器
-    /// </summary>
-    private readonly DispatcherTimer _frameTimer = new()
-    {
-        Interval = TimeSpan.FromMilliseconds(GlobalTimerPeriod),
-    };
-
-    void GenerateTimer()
-    {
-        _frameTimer.Tick += (s, m) =>
-        {
-            Task.Run(() => {
-                var display = new DisplayFrame();
-                DhyanaObject.GetCurrentFrame((int)(GlobalTimerPeriod));
-                if (Frame2Bytes(ref display, DhyanaObject.CurrentFrame))
-                    WeakReferenceMessenger.Default.Send<DisplayFrame, string>(display, "Display");
-            });
-        };
-    }
-
-    #endregion
-
-    #region Constructor
+    static double GlobalTimerPeriod { get; set; } = DefaultFrameInterval + 5;
 
     public CameraViewModel()
     {
@@ -110,6 +79,35 @@ public partial class CameraViewModel : ObservableObject
         DhyanaObject.UninitializeSdk();
     }
 
+
+
+
+    /// <summary>
+    /// 获取frame的定时器
+    /// </summary>
+    private readonly DispatcherTimer _frameTimer = new()
+    {
+        Interval = TimeSpan.FromMilliseconds(GlobalTimerPeriod),
+    };
+
+    void GenerateTimer()
+    {
+        _frameTimer.Tick += (s, m) =>
+        {
+            Task.Run(() =>
+            {
+                var display = new DisplayFrame();
+                DhyanaObject.GetCurrentFrame((int)(GlobalTimerPeriod));
+                if (Frame2Bytes(ref display, DhyanaObject.CurrentFrame))
+                    WeakReferenceMessenger.Default.Send<DisplayFrame, string>(display, "Display");
+            });
+        };
+    }
+
+
+
+
+
     /// <summary>
     /// 初始化赋值参数和获取参数值
     /// </summary>
@@ -119,7 +117,6 @@ public partial class CameraViewModel : ObservableObject
         InitalizeExposure();
     }
 
-    #endregion
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();
 
@@ -173,7 +170,7 @@ public partial class CameraViewModel : ObservableObject
                 DhyanaObject.UnInitializeCamera();
                 DhyanaObject.UninitializeSdk();
             }
-                
+
         });
     }
 
@@ -216,7 +213,7 @@ public partial class CameraViewModel : ObservableObject
 
         _frameTimer.Stop();
         DhyanaObject.StopCapture();
-        
+
     }
 
     /// <summary>
@@ -405,7 +402,7 @@ public partial class CameraViewModel : ObservableObject
             RoiEnabled = attr.bEnable;
         });
 
-    
+
     [ObservableProperty]
     private bool _roiEnabled = false;
 

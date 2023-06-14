@@ -21,7 +21,7 @@ namespace Simscop.Spindisk.Core.ViewModels;
 public partial class ShellViewModel : ObservableObject
 {
     [ObservableProperty]
-    private ImageSource _imageFirst;
+    private ImageSource? _imageFirst;
 
     //private WriteableBitmap _wbBitmap;
 
@@ -36,56 +36,15 @@ public partial class ShellViewModel : ObservableObject
             });
         });
 
+
+        // TODO 这里之后单独抽出来，之后所有的关于图片的转换，处理，或者其他功能都应该由某个单独的对象综合处理，因为不同的viewmodel都会对
+        // TODO 实际的Image对象进行操作
+
+
         //WeakReferenceMessenger.Default.Register<DisplayFrame, string>(this, "ResetSize", (s, m) => {
         //    System.Windows.Application.Current.Dispatcher.Invoke(() => ResetBitmap(m));
         //});
     }
-
-    //private void ResetBitmap(DisplayFrame frame)
-    //{
-    //    _wbBitmap = new WriteableBitmap(frame.Width, frame.Height, 96, 96, PixelFormats.Rgb24, null);
-    //    ImageFirst = _wbBitmap;
-    //}
-
-    //// NOTE 这个方法暂时搁浅，因为涉及到了一些目前位置的数据格式转换，无法很好的完成Bitmap转换工作
-    //private void ShowImage(DisplayFrame frame)
-    //{
-    //    unsafe
-    //    {
-
-    //    }
-
-    //    _wbBitmap.Lock();
-    //    Marshal.Copy(frame.FrameObject, 0, _wbBitmap.BackBuffer, frame.Height * frame.Width);
-    //    _wbBitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, frame.Width, frame.Height));
-    //    _wbBitmap.Unlock();
-    //}
-
-
-
-    //private void ShowImageOld1(DisplayFrame frame)
-    //{
-    //    int width = frame.Width;
-    //    int height = frame.Height;
-    //    int stride = frame.Stride;
-
-    //    GCHandle handle = GCHandle.Alloc(frame.FrameObject, GCHandleType.Pinned);
-    //    long scan = (long)handle.AddrOfPinnedObject();
-    //    scan += (height - 1) * stride;
-
-    //    Bitmap bitmap = new Bitmap(width, height, -stride,
-    //        System.Drawing.Imaging.PixelFormat.Format24bppRgb, (IntPtr)scan);
-
-    //    ImageFirst = ToWpfBitmap(bitmap);
-
-    //    handle.Free();
-
-    //    //var show = bitmap.Clone(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
-    //    //    bitmap.PixelFormat);
-
-
-    //}
-
 
     // NOTE 这里Stride这个东西，需要之后认真调研一下，上面的代码终究还是太繁琐了
 

@@ -7,6 +7,8 @@
     <UseWPF>true</UseWPF>
     <AnalysisLevel>latest</AnalysisLevel>
     <LangVersion>latest</LangVersion>
+    <PackageIcon></PackageIcon>
+    <ApplicationIcon>Image\logo.ico</ApplicationIcon>
 
   </PropertyGroup>
 
@@ -23,7 +25,6 @@
     <None Remove="Image\blue.jpg" />
     <None Remove="Image\camera.png" />
     <None Remove="Image\green.jpg" />
-    <None Remove="Image\logo.png" />
     <None Remove="Image\not_select.png" />
     <None Remove="Image\red.jpg" />
     <None Remove="Image\remix.jpg" />
@@ -32,6 +33,10 @@
     <None Remove="Image\stop.png" />
     <None Remove="Image\temp.jpg" />
     <None Remove="Image\z.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Image\logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,5 +81,12 @@
     <Resource Include="Image\stop.png" />
     <Resource Include="Image\temp.jpg" />
     <Resource Include="Image\z.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Image\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>

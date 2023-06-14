@@ -24,6 +24,10 @@ public class DisplayFrame
 
     public int Stride { get; set; } = 0;
 
+    /// <summary>
+    /// TODO 这里之后必须得优化
+    /// </summary>
+    /// <param name="source"></param>
     public void ToBitmapSource(out BitmapImage source)
     {
         GCHandle handle = GCHandle.Alloc(FrameObject, GCHandleType.Pinned);

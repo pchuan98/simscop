@@ -185,17 +185,18 @@ public partial class CameraViewModel : ObservableObject
     void AutoLoadOnCapture()
     {
         DhyanaObject.SetHistc(true);
-        DhyanaObject.SetAutolevels(0);
+
+        DhyanaObject.SetAutolevels(3);
+        IsAutoRightLevel = true;
+        IsAutoLeftLevel = true;
 
         IsAutoExposure = true;
 
         if (DhyanaObject.GetGamma(out double gamma)) Gamma = gamma;
-        
         if(DhyanaObject.GetContrast(out var contrast)) Contrast=contrast;
 
 
-        IsAutoRightLevel = true;
-        IsAutoLeftLevel = true;
+        
     }
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();
@@ -675,40 +676,35 @@ public partial class CameraViewModel : ObservableObject
     private uint _imageModeIndex = 0;
 
     partial void OnImageModeIndexChanged(uint value)
-        => SetValueWithCapture(() =>
+    {
+        switch (ImageModeIndex)
         {
             // 这部分完全去按照操作手册里面给的来写
-            if (ImageModeIndex == 0)
-            {
+            case 0:
                 GlobalGain = 0;
                 ImageMode = 1;
-            }
-            else if (ImageModeIndex == 1)
-            {
+                break;
+            case 1:
                 GlobalGain = 0;
                 ImageMode = 2;
-            }
-            else if (ImageModeIndex == 2)
-            {
+                break;
+            case 2:
                 GlobalGain = 1;
                 ImageMode = 3;
-            }
-            else if (ImageModeIndex == 3)
-            {
+                break;
+            case 3:
                 GlobalGain = 2;
                 ImageMode = 4;
-            }
-            else if (ImageModeIndex == 4)
-            {
+                break;
+            case 4:
                 // NOTE 这里不确定如果等于2是个什么情况
                 GlobalGain = 1;
                 ImageMode = 5;
-            }
-            else
-            {
-
-            }
-        });
+                break;
+            default:
+                break;
+        }
+    }
 
     [ObservableProperty]
     private int _globalGain = 0;

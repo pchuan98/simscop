@@ -117,13 +117,13 @@ public partial class CameraViewModel : ObservableObject
                 if (IsAutoLeftLevel)
                 {
                     DhyanaObject.GetLeftLevels(out var lv);
-                    LeftLevel = (int)lv;
+                    LeftLevel = lv;
                 }
 
                 if (IsAutoRightLevel)
                 {
                     DhyanaObject.GetLeftLevels(out var rv);
-                    RightLevel = (int)rv;
+                    RightLevel = rv;
                 }
             });
         };
@@ -618,14 +618,14 @@ public partial class CameraViewModel : ObservableObject
     /// 16bit - 65534
     /// </summary>
     [ObservableProperty]
-    private int _leftLevel = 0;
+    private double _leftLevel = 0;
 
     /// <summary>
     /// 8bit  - 254
     /// 16bit - 65534
     /// </summary>
     [ObservableProperty]
-    private int _rightLevel = 0;
+    private double _rightLevel = 0;
     #endregion
 
     #region Noise

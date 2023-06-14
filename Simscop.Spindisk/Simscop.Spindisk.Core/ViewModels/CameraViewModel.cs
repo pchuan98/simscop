@@ -90,7 +90,7 @@ public partial class CameraViewModel : ObservableObject
 
     public CameraViewModel()
     {
-        if (DhyanaObject.InitializeSdk())
+        if (!DhyanaObject.InitializeSdk())
         {
             MessageBox.Show("初始化SDK出错");
             throw new NotSupportedException();

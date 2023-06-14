@@ -68,7 +68,6 @@
                                 <CheckBox
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
-                                    Command="{Binding ConnectCameraCommand}"
                                     Content="连接相机"
                                     DockPanel.Dock="Left"
                                     IsChecked="{Binding CameraConnected}"

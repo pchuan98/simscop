@@ -211,6 +211,9 @@ public partial class CameraViewModel : ObservableObject
     [ObservableProperty]
     private bool _cameraConnected = false;
 
+    partial void OnCameraConnectingChanged(bool value)
+        => ConnectCamera();
+
     /// <summary>
     /// 只控制相机按钮
     /// </summary>
@@ -220,7 +223,7 @@ public partial class CameraViewModel : ObservableObject
     #endregion
 
     [RelayCommand]
-    async Task OpenCameraAndCapture()
+    void OpenCameraAndCapture()
     {
         switch (CameraConnected)
         {
@@ -232,7 +235,7 @@ public partial class CameraViewModel : ObservableObject
                 CaptureFrame();
                 break;
             default:
-                CaptureFrame(); 
+                CaptureFrame();
                 ConnectCamera();
                 break;
         }
@@ -242,10 +245,8 @@ public partial class CameraViewModel : ObservableObject
 
     //TODO 这里之后要记得写一个控件，在True和False之间切换会有图像切换
 
-    [RelayCommand]
     void ConnectCamera()
-    {
-        Task.Run(() =>
+        => Task.Run(() =>
        {
            CameraConnecting = false;
            if (CameraConnected)
@@ -267,8 +268,8 @@ public partial class CameraViewModel : ObservableObject
                DhyanaObject.UninitializeSdk();
            }
            CameraConnecting = true;
-       });
-    }
+       }).Wait();
+
 
 
 
@@ -546,9 +547,6 @@ public partial class CameraViewModel : ObservableObject
                 DhyanaObject.SetAutolevels(0);
                 break;
         }
-
-        if (!IsAutoLeftLevel && !IsAutoRightLevel) _levelTimer.Stop();
-        else _levelTimer.Start();
     }
 
 

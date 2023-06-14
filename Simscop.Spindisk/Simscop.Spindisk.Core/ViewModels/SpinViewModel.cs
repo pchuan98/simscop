@@ -11,6 +11,11 @@ using Simscop.API;
 
 namespace Simscop.Spindisk.Core.ViewModels;
 
+/**
+ * Note 之后可以添加功能：
+ *  自动识别串口并选择
+ */
+
 /// <summary>
 /// 转盘操作
 /// </summary>
@@ -19,67 +24,83 @@ public partial class SpinViewModel : ObservableObject
     public SpinViewModel()
     {
         ComList = Simscop.API.Helper.SerialHelper.GetAllCom();
-
-        _timer = new DispatcherTimer();
-        _timer.Tick += (s, e) =>
-        {
-
-        };
     }
 
-
     [ObservableProperty]
-    private bool _spinChangeEnable = true;
+    private bool _spinViewEnabled = true;
 
-    private DispatcherTimer _timer;
-
-    /// <summary>
-    /// 等待时间
-    /// </summary>
-    /// <param name="value"></param>
-    private void Delay(int value = 1)
+    private void DelaySpinViewEnabled(int value)
     {
         Task.Run(() =>
         {
-            SpinChangeEnable = false;
-            Task.Delay(value * 1000); 
-            SpinChangeEnable = true;
+            SpinViewEnabled = false;
+            Task.Delay(value * 1000).Wait();
+            SpinViewEnabled = true;
         });
     }
+
+    [ObservableProperty]
+    private bool _spinControlEnabled = true;
 
     public List<string> ComList { get; set; }
 
     [ObservableProperty]
-    private string _comName = "";
+    private string _comName = "COM6";
 
     [ObservableProperty]
     private bool _isConnected = false;
 
+    [ObservableProperty]
+    private bool _isConnectting = true;
+
+    partial void OnIsConnectedChanged(bool value)
+        => SpinControlEnabled = value;
+
     [RelayCommand]
-    void ConnectCom()
+    public void ConnectCom()
     {
-        if (!IsConnected) IsConnected = XLight.Connect(ComName);
-        else XLight.Disconnect();
+        try
+        {
+            IsConnectting = false;
+
+            if (!IsConnected)
+                IsConnected = XLight.Connect(ComName);
+
+            else XLight.Disconnect();
+
+            IsConnectting = true;
+        }
+        catch (Exception e)
+        {
+            IsConnectting = true;
+            IsConnected = false;
+            MessageBox.Show("接口出现错误，连接失败");
+        }
 
     }
 
     [RelayCommand]
-    void Reset() => XLight.Reset();
+    void Reset()
+    {
+        XLight.Reset();
+        DelaySpinViewEnabled(SpiningIndex == 1 ? 10 : 5);
+    }
 
+    [ObservableProperty]
     private bool _diskEnable = false;
 
     [RelayCommand]
     void SetDisk()
     {
-
+        // TODO 这里之后要修改成为从串口获取实时数据来抉择是否完成后面的任务
         if (XLight.FlagD == 0) SpiningIndex = 1;
 
-        if (_diskEnable) XLight.SetDichroic(1);
+        if (DiskEnable) XLight.SetDichroic(1);
         else XLight.SetDisk(0);
 
-        Delay(2);
+        DelaySpinViewEnabled(2);
 
-        _diskEnable = !_diskEnable;
+        DiskEnable = !DiskEnable;
     }
 
     #region Spining
@@ -95,7 +116,7 @@ public partial class SpinViewModel : ObservableObject
     partial void OnSpiningIndexChanged(uint value)
     {
         XLight.SetSpining(value);
-        Delay(8);
+        DelaySpinViewEnabled(8);
     }
 
     #endregion
@@ -111,7 +132,10 @@ public partial class SpinViewModel : ObservableObject
     private uint _dichroicIndex = 0;
 
     partial void OnDichroicIndexChanged(uint value)
-        => XLight.SetDichroic(value);
+    {
+        XLight.SetDichroic(value);
+        DelaySpinViewEnabled(3);
+    }
 
     #endregion
 
@@ -126,7 +150,11 @@ public partial class SpinViewModel : ObservableObject
     private uint _emissionIndex = 0;
 
     partial void OnEmissionIndexChanged(uint value)
-        => XLight.SetEmission(value);
+    {
+        XLight.SetEmission(value); 
+        DelaySpinViewEnabled(3);
+
+    }
 
     #endregion
 
@@ -141,7 +169,10 @@ public partial class SpinViewModel : ObservableObject
     private uint _excitationIndex = 0;
 
     partial void OnExcitationIndexChanged(uint value)
-        => XLight.SetExcitation(value);
+    {
+        XLight.SetExcitation(value);
+        DelaySpinViewEnabled(3);
+    }
 
     #endregion
 }

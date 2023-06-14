@@ -38,6 +38,8 @@ namespace Simscop.API;
 
 // NOTE Timeout功能暂时搁置，不必要这么复杂，做好串接就好，或者未来写个事件池，自己在后台判断命令是不是都读完了
 
+// NOTE 上面的结论只适合初期，后面依旧要要求返回值的，因为必须需要返回值来标定每一次数据更新带来的事件是否完成成功
+
 public static class XLight
 {
     /// <summary>

@@ -5,8 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Simscop.Spindisk.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Simscop.Spindisk.Core.ViewModels;assembly=Simscop.Spindisk.Core"
+    d:DataContext="{d:DesignInstance vm:SpinViewModel}"
     mc:Ignorable="d">
-    <StackPanel IsEnabled="{Binding SpinChangeEnable}">
+
+    <StackPanel>
 
         <TextBlock
             Margin="20,10,0,10"
@@ -25,6 +28,8 @@
                 Command="{Binding ConnectComCommand}"
                 Content="O 连接"
                 DockPanel.Dock="Right"
+                IsChecked="{Binding IsConnected}"
+                IsEnabled="{Binding IsConnectting}"
                 Style="{StaticResource CheckBoxAsButton}" />
 
             <Viewbox>
@@ -47,7 +52,8 @@
                 VerticalAlignment="Stretch"
                 Command="{Binding ResetCommand}"
                 Content="复位"
-                FontSize="14" />
+                FontSize="14"
+                IsEnabled="{Binding SpinControlEnabled}" />
 
             <CheckBox
                 Margin="5,0,0,0"
@@ -58,6 +64,7 @@
                 Content="开启"
                 FontSize="13"
                 IsChecked="{Binding DiskEnable}"
+                IsEnabled="{Binding SpinControlEnabled}"
                 Style="{StaticResource CheckBoxAsButton}" />
 
         </UniformGrid>
@@ -77,6 +84,7 @@
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
+                    IsEnabled="{Binding SpinControlEnabled}"
                     ItemsSource="{Binding SpiningCollection}"
                     SelectedIndex="{Binding SpiningIndex}" />
             </Viewbox>
@@ -96,6 +104,7 @@
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
+                    IsEnabled="{Binding SpinControlEnabled}"
                     ItemsSource="{Binding DichroicCollection}"
                     SelectedIndex="{Binding DichroicIndex}" />
             </Viewbox>
@@ -114,6 +123,7 @@
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
+                    IsEnabled="{Binding SpinControlEnabled}"
                     ItemsSource="{Binding EmissionCollection}"
                     SelectedIndex="{Binding EmissionIndex}" />
             </Viewbox>
@@ -132,6 +142,7 @@
             <Viewbox Height="35" Margin="0,2">
                 <ComboBox
                     Width="170"
+                    IsEnabled="{Binding SpinControlEnabled}"
                     ItemsSource="{Binding ExcitationCollection}"
                     SelectedIndex="{Binding ExcitationIndex}" />
             </Viewbox>

@@ -18,6 +18,7 @@ using DhyanaObject = Simscop.API.Dhyana;
 using Simscop.API.Native;
 
 using System.Text.RegularExpressions;
+using System.Windows.Automation;
 using System.Windows.Documents;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Media.Animation;
@@ -325,7 +326,9 @@ public partial class CameraViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.ToString());
+            //MessageBox.Show(e.ToString());
+            throw new Exception("", e);
+
             IsCapture = false;
         }
     }
@@ -343,7 +346,8 @@ public partial class CameraViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.ToString());
+            //MessageBox.Show(e.ToString());
+            throw new Exception("", e);
             IsCapture = false;
         }
 
@@ -383,7 +387,9 @@ public partial class CameraViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.Message);
+            //MessageBox.Show(e.Message);
+            throw new Exception("", e);
+
             return false;
         }
         return true;
@@ -793,7 +799,9 @@ public partial class CameraViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.ToString());
+            //MessageBox.Show(e.ToString());
+            throw new Exception("", e);
+
         }
     }
 
@@ -813,7 +821,9 @@ public partial class CameraViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.ToString());
+            //MessageBox.Show(e.ToString());
+            throw new Exception("", e);
+
         }
     }
 

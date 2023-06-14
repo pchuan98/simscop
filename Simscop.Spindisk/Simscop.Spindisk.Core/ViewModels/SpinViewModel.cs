@@ -59,27 +59,26 @@ public partial class SpinViewModel : ObservableObject
     [RelayCommand]
     public void ConnectCom()
     {
+        IsConnectting = false;
         try
         {
-            IsConnectting = false;
-
             if (!IsConnected)
                 IsConnected = XLight.Connect(ComName);
-
             else
             {
-                
                 XLight.Disconnect();
                 IsConnected = false;
             }
-
-            IsConnectting = true;
         }
         catch (Exception e)
         {
             IsConnectting = true;
             IsConnected = false;
             MessageBox.Show("接口出现错误，连接失败");
+        }
+        finally
+        {
+            IsConnectting = true;
         }
 
     }

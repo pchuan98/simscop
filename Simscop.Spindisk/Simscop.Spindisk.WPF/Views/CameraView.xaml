@@ -70,7 +70,7 @@
                                     HorizontalAlignment="Stretch"
                                     Content="连接相机"
                                     DockPanel.Dock="Left"
-                                    IsChecked="{Binding CameraConnected}"
+                                    IsChecked="{Binding CameraFlag}"
                                     IsEnabled="{Binding CameraConnecting}"
                                     Style="{StaticResource CheckBoxAsButton}" />
 

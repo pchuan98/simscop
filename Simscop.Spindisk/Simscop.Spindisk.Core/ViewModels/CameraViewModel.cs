@@ -18,6 +18,7 @@ using DhyanaObject = Simscop.API.Dhyana;
 using Simscop.API.Native;
 
 using System.Text.RegularExpressions;
+using System.Windows.Documents;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -89,6 +90,12 @@ public partial class CameraViewModel : ObservableObject
 
     public CameraViewModel()
     {
+        if (DhyanaObject.InitializeSdk())
+        {
+            MessageBox.Show("初始化SDK出错");
+            throw new NotSupportedException();
+        }
+
         _frameTimer.Tick += (s, m) =>
         {
             Task.Run(() =>
@@ -207,18 +214,22 @@ public partial class CameraViewModel : ObservableObject
 
     /// <summary>
     /// 除Camer以外，控制他们所有的相机的Connected
+    /// 用来标定实际结果
     /// </summary>
     [ObservableProperty]
     private bool _cameraConnected = false;
-
-    partial void OnCameraConnectingChanged(bool value)
-        => ConnectCamera();
 
     /// <summary>
     /// 只控制相机按钮
     /// </summary>
     [ObservableProperty]
     private bool _cameraConnecting = true;
+
+    /// <summary>
+    /// 仅仅代表Camera这个按钮的情况
+    /// </summary>
+    [ObservableProperty]
+    private bool _cameraFlag = false;
 
     #endregion
 
@@ -246,29 +257,25 @@ public partial class CameraViewModel : ObservableObject
     //TODO 这里之后要记得写一个控件，在True和False之间切换会有图像切换
 
     void ConnectCamera()
-        => Task.Run(() =>
-       {
-           CameraConnecting = false;
-           if (CameraConnected)
-           {
-               if (!DhyanaObject.InitializeSdk())
-               {
-                   MessageBox.Show("初始化失败");
-                   return;
-               }
-               CameraConnected = DhyanaObject.InitializeCamera(0);
-               if (!CameraConnected) MessageBox.Show("相机链接失败");
+    {
+        CameraConnecting = false;
 
-               AutoLoadOnCameraConnected();
-           }
+        if (CameraFlag)
+        {
+            CameraConnected = DhyanaObject.InitializeCamera(0);
 
-           else
-           {
-               DhyanaObject.UnInitializeCamera();
-               DhyanaObject.UninitializeSdk();
-           }
-           CameraConnecting = true;
-       }).Wait();
+            if (!CameraConnected) MessageBox.Show("相机链接失败");
+            else AutoLoadOnCameraConnected();
+        }
+
+        else
+        {
+            DhyanaObject.UnInitializeCamera();
+            DhyanaObject.UninitializeSdk();
+        }
+
+        CameraConnecting = true;
+    }
 
 
 

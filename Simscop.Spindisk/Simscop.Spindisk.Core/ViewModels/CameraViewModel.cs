@@ -184,8 +184,8 @@ public partial class CameraViewModel : ObservableObject
 
     void AutoLoadOnCapture()
     {
-        //IsHistc = true;
-        //IsAutoExposure = true;
+        DhyanaObject.SetHistc(true);
+        IsAutoExposure = true;
         //IsAutoRightLevel = true;
         //IsAutoLeftLevel = true;
     }
@@ -198,17 +198,16 @@ public partial class CameraViewModel : ObservableObject
     /// <param name="action"></param>
     private void SetValueWithCapture(Action action)
     {
-        if (IsCapture)
+        Task.Run(() =>
         {
-            StopCapture();
-
-            Task.Delay(1000).Wait();
-
-            action();
-
-            StartCapture();
-        }
-        else action();
+            if (IsCapture)
+            {
+                StopCapture();
+                action();
+                StartCapture();
+            }
+            else action();
+        });
     }
 
     #region Enabled

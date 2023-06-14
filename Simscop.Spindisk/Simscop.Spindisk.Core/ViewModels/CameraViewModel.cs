@@ -195,10 +195,14 @@ public partial class CameraViewModel : ObservableObject
     /// <param name="action"></param>
     private void SetValueWithCapture(Action action)
     {
-        if (IsCapture == true)
+        if (IsCapture)
         {
             StopCapture();
+
+            Task.Delay(1000).Wait();
+
             action();
+
             StartCapture();
         }
         else action();

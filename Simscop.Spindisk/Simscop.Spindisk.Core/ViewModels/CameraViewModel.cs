@@ -71,6 +71,8 @@ public partial class CameraViewModel : ObservableObject
 
     partial void OnGlobalTimerPeriodChanged(double value)
     {
+        if (!(value > 10)) return;
+
         _frameTimer.Interval = TimeSpan.FromMilliseconds(value);
         _levelTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
     }
@@ -255,7 +257,6 @@ public partial class CameraViewModel : ObservableObject
 
         if (CameraFlag)
         {
-            CameraFlag = false;
 
             if (!DhyanaObject.InitializeSdk())
             {
@@ -274,6 +275,8 @@ public partial class CameraViewModel : ObservableObject
         {
             DhyanaObject.UnInitializeCamera();
             DhyanaObject.UninitializeSdk();
+
+            CameraConnected = false;
         }
 
         CameraConnecting = true;

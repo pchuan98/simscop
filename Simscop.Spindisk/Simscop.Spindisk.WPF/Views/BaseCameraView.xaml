@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:Simscop.Spindisk.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Simscop.Spindisk.Core.ViewModels;assembly=Simscop.Spindisk.Core"
+    d:DataContext="{d:DesignInstance vm:CameraViewModel}"
     mc:Ignorable="d">
 
     <Grid>
@@ -43,7 +44,8 @@
                 Padding="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Content="O 录制" />
+                Content="O 录制"
+                IsEnabled="False" />
 
             <Button
                 Width="auto"
@@ -51,15 +53,19 @@
                 Padding="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Content="存储图片" />
+                Content="存储图片"
+                IsEnabled="False" />
 
-            <Button
+            <CheckBox
                 Width="auto"
                 Margin="5,0"
                 Padding="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Content="自动曝光" />
+                Content="自动曝光"
+                IsChecked="{Binding IsAutoExposure}"
+                IsEnabled="{Binding CameraConnected}"
+                Style="{StaticResource CheckBoxAsButton}" />
         </UniformGrid>
 
         <UniformGrid Grid.Row="2" Columns="2">
@@ -67,16 +73,20 @@
                 Width="100"
                 Height="100"
                 Margin="0,30,0,0"
-                Command="{Binding FakeCommand}"
+                Command="{Binding OpenCameraAndCaptureCommand}"
                 Focusable="False"
-                IsStart="{Binding IsStart}" />
+                IsEnabled="{Binding CameraConnecting}"
+                IsStart="{Binding IsCapture}" />
 
-            <UniformGrid Margin="0,10,0,0" Rows="3">
+            <UniformGrid
+                Margin="0,10,0,0"
+                IsEnabled="{Binding CameraConnected}"
+                Rows="3">
                 <StackPanel Margin="0,0,5,0">
                     <Viewbox>
                         <ComboBox
                             Width="170"
-                            ItemsSource="{Binding Resolutions}"
+                            ItemsSource="{Binding ResolutionsLite}"
                             SelectedIndex="{Binding ResolutionIndex, Mode=TwoWay}" />
                     </Viewbox>
                     <TextBlock
@@ -109,7 +119,7 @@
                     <Viewbox>
                         <ComboBox
                             Width="170"
-                            ItemsSource="{Binding RoiMode}"
+                            ItemsSource="{Binding RoiModeLite}"
                             SelectedIndex="{Binding RoiModeIndex, Mode=TwoWay}" />
 
                     </Viewbox>

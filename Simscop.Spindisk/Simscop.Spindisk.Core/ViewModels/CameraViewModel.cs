@@ -19,6 +19,7 @@ using Simscop.API.Native;
 
 using System.Text.RegularExpressions;
 using System.Windows.Forms.VisualStyles;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace Simscop.Spindisk.Core.ViewModels;
@@ -60,37 +61,33 @@ public partial class CameraViewModel : ObservableObject
 {
     private const double DefaultFrameInterval = 200;
 
-    static double GlobalTimerPeriod { get; set; } = DefaultFrameInterval + 5;
+    private const double PeriodSurplus = 5;
 
-    public CameraViewModel()
+    private const int AutoExposureInterval = 5000;
+
+    [ObservableProperty]
+    private double _globalTimerPeriod = DefaultFrameInterval + PeriodSurplus;
+
+    partial void OnGlobalTimerPeriodChanged(double value)
     {
-        GenerateTimer();
-
-        // TODO 这里等会要删除了啊
-        //DhyanaObject.InitializeSdk();
-        //DhyanaObject.InitializeCamera(0);
-
-        InitializeValue();
+        _frameTimer.Interval = TimeSpan.FromMilliseconds(value);
+        _levelTimer.Interval = TimeSpan.FromMilliseconds(value + PeriodSurplus);
     }
 
-    ~CameraViewModel()
-    {
-        DhyanaObject.UnInitializeCamera();
-        DhyanaObject.UninitializeSdk();
-    }
-
-
-
+    private static DispatcherPriority FrameTimerPriority 
+        => DispatcherPriority.Render;
 
     /// <summary>
     /// 获取frame的定时器
     /// </summary>
-    private readonly DispatcherTimer _frameTimer = new()
-    {
-        Interval = TimeSpan.FromMilliseconds(GlobalTimerPeriod),
-    };
+    private readonly DispatcherTimer _frameTimer = new(priority: FrameTimerPriority);
 
-    void GenerateTimer()
+    /// <summary>
+    /// 色阶使用自动初始化器，但是因为显示问题，他的所有值更改应该依据Frame更改来驱动
+    /// </summary>
+    private readonly DispatcherTimer _levelTimer = new(priority: FrameTimerPriority);
+
+    public CameraViewModel()
     {
         _frameTimer.Tick += (s, m) =>
         {
@@ -100,23 +97,92 @@ public partial class CameraViewModel : ObservableObject
                 DhyanaObject.GetCurrentFrame((int)(GlobalTimerPeriod));
                 if (Frame2Bytes(ref display, DhyanaObject.CurrentFrame))
                     WeakReferenceMessenger.Default.Send<DisplayFrame, string>(display, "Display");
+
             });
         };
+
+        _levelTimer.Tick += (s, m) =>
+        {
+            Task.Run(() =>
+            {
+                if (IsAutoLeftLevel)
+                {
+                    DhyanaObject.GetLeftLevels(out var lv);
+                    LeftLevel = (int)lv;
+                }
+
+                if (IsAutoRightLevel)
+                {
+                    DhyanaObject.GetLeftLevels(out var rv);
+                    RightLevel = (int)rv;
+                }
+            });
+        };
+
+
+        RefreshValue();
     }
 
-
-
-
+    ~CameraViewModel()
+    {
+        DhyanaObject.UnInitializeCamera();
+        DhyanaObject.UninitializeSdk();
+    }
 
     /// <summary>
     /// 初始化赋值参数和获取参数值
+    /// 曝光，最大最小
+    /// 
     /// </summary>
-    void InitializeValue()
+    void RefreshValue()
     {
+        RefreshExposure();
+        RefreshRoi();
 
-        InitalizeExposure();
     }
 
+    void RefreshExposure()
+    {
+        // Expousure
+        DhyanaObject.GetExposureAttr(out var attr);
+
+        ExposureModel.MinExposure = attr.dbValMin;
+        ExposureModel.MaxExposure = attr.dbValMax;
+        ExposureModel.DefaultExposure = attr.dbValDft;
+        ExposureModel.StepExposure = attr.dbValStep;
+    }
+
+    private void RefreshRoi()
+    {
+        TUCAM_ROI_ATTR attr = default;
+        DhyanaObject.GetRoi(ref attr);
+
+        RoiModel.HOffset = attr.nHOffset;
+        RoiModel.VOffset = attr.nVOffset;
+        RoiModel.Width = attr.nWidth;
+        RoiModel.Height = attr.nHeight;
+
+        RoiEnabled = attr.bEnable;
+    }
+
+    /// <summary>
+    /// 自动设置相机属性
+    /// 这个功能只在相机连接之后完成
+    /// </summary>
+    void AutoLoadOnCameraConnected()
+    {
+        IsHistc = true;
+        IsAutoExposure=true;
+        IsAutoRightLevel = true;
+        IsAutoLeftLevel = true;
+    }
+
+    void AutoLoadOnCapture()
+    {
+
+        IsAutoRightLevel = true;
+        IsAutoLeftLevel = true;
+    }
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();
 
@@ -124,45 +190,73 @@ public partial class CameraViewModel : ObservableObject
     /// 更新某些参数暂停Capture
     /// </summary>
     /// <param name="action"></param>
-    private void RefreshCapture(Action action)
+    private void SetValueWithCapture(Action action)
     {
         if (IsCapture == true)
         {
             StopCapture();
-
             action();
-
             StartCapture();
         }
         else action();
+    }
+
+    #region Enabled
+
+    /// <summary>
+    /// 除Camer以外，控制他们所有的相机的Connected
+    /// </summary>
+    [ObservableProperty]
+    private bool _cameraConnected = false;
+
+    /// <summary>
+    /// 只控制相机按钮
+    /// </summary>
+    [ObservableProperty]
+    private bool _cameraConnecting = true;
+
+    #endregion
+
+    [RelayCommand]
+    async Task OpenCameraAndCapture()
+    {
+        switch (CameraConnected)
+        {
+            case false:
+                await ConnectCamera();
+                CaptureFrame();
+                break;
+            case true when !IsCapture:
+                CaptureFrame();
+                break;
+            default:
+                CaptureFrame();
+                await ConnectCamera();
+                break;
+        }
     }
 
     #region Camera
 
     //TODO 这里之后要记得写一个控件，在True和False之间切换会有图像切换
 
-    [ObservableProperty]
-    private bool _isCameraConnected = false;
-
-
     [RelayCommand]
     async Task ConnectCamera()
     {
         await Task.Run(() =>
         {
-            if (!IsCameraConnected)
+            CameraConnecting = false;
+            if (CameraConnected)
             {
                 if (!DhyanaObject.InitializeSdk())
                 {
                     MessageBox.Show("初始化失败");
                     return;
                 }
+                CameraConnected = DhyanaObject.InitializeCamera(0);
+                if (!CameraConnected) MessageBox.Show("相机链接失败");
 
-                IsCameraConnected = DhyanaObject.InitializeCamera(0);
-
-                if (!IsCameraConnected) MessageBox.Show("相机链接失败");
-
-                IsHistc = true;
+                AutoLoadOnCameraConnected();
             }
 
             else
@@ -170,7 +264,7 @@ public partial class CameraViewModel : ObservableObject
                 DhyanaObject.UnInitializeCamera();
                 DhyanaObject.UninitializeSdk();
             }
-
+            CameraConnecting = true;
         });
     }
 
@@ -185,7 +279,7 @@ public partial class CameraViewModel : ObservableObject
     [RelayCommand]
     void CaptureFrame()
     {
-        if (!IsCapture) StartCapture();
+        if (IsCapture) StartCapture();
         else StopCapture();
     }
 
@@ -194,13 +288,19 @@ public partial class CameraViewModel : ObservableObject
     /// </summary>
     private void StartCapture()
     {
-        if (IsCapture) return;
+        try
+        {
+            RefreshExposure();
+            DhyanaObject.StartCapture();
 
-        IsCapture = true;
-        InitalizeExposure();
-        DhyanaObject.StartCapture();
-
-        _frameTimer.Start();
+            _frameTimer.Start();
+            AutoLoadOnCapture();
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.ToString());
+            IsCapture = false;
+        }
     }
 
     /// <summary>
@@ -208,11 +308,16 @@ public partial class CameraViewModel : ObservableObject
     /// </summary>
     private void StopCapture()
     {
-        if (!IsCapture) return;
-        IsCapture = false;
-
-        _frameTimer.Stop();
-        DhyanaObject.StopCapture();
+        try
+        {
+            _frameTimer.Stop();
+            DhyanaObject.StopCapture();
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.ToString());
+            IsCapture = false;
+        }
 
     }
 
@@ -258,6 +363,27 @@ public partial class CameraViewModel : ObservableObject
 
     #endregion
 
+    #region Resolution
+
+    public List<string> Resolutions => Dhyana.Resolutions;
+
+    public List<string> ResolutionsLite => new List<string>()
+    {
+        "2048", "2048(E)", "1024", "512"
+    };
+
+    [ObservableProperty]
+    private int _resolutionIndex = 0;
+
+    partial void OnResolutionIndexChanged(int value)
+    {
+        SetValueWithCapture(() => DhyanaObject.SetResolution(value));
+
+        RefreshExposure();
+    }
+
+    #endregion
+
     #region Exposure
 
     [ObservableProperty]
@@ -265,14 +391,12 @@ public partial class CameraViewModel : ObservableObject
 
     partial void OnExposureChanged(double value)
     {
-        GlobalTimerPeriod = value + 100;
-        _frameTimer.Interval = TimeSpan.FromMilliseconds(GlobalTimerPeriod);
+        GlobalTimerPeriod = value;
 
-        if (!IsAutoExposure)
-        {
-            DhyanaObject.SetExposure(value);
-            ExposureModel.Exposure = value;
-        }
+        if (IsAutoExposure) return;
+
+        DhyanaObject.SetExposure(value);
+        ExposureModel.Exposure = value;
     }
 
     /// <summary>
@@ -301,11 +425,12 @@ public partial class CameraViewModel : ObservableObject
                 Exposure = val;
                 ExposureModel.Exposure = val;
 
-                Task.Delay(5000);
+                Task.Delay(AutoExposureInterval).Wait();
             }
         });
     }
 
+    // TODO 这个方法肯定得重写的
     [RelayCommand]
     async Task SetOnceExposure()
     {
@@ -332,32 +457,6 @@ public partial class CameraViewModel : ObservableObject
         });
     }
 
-    #endregion
-
-
-    void InitalizeExposure()
-    {
-        // Expousure
-        DhyanaObject.GetExposureAttr(out var attr);
-
-        ExposureModel.MinExposure = attr.dbValMin;
-        ExposureModel.MaxExposure = attr.dbValMax;
-        ExposureModel.DefaultExposure = attr.dbValDft;
-        ExposureModel.StepExposure = attr.dbValStep;
-    }
-
-    #region resolutions
-
-    public List<string> Resolutions => Dhyana.Resolutions;
-
-    [ObservableProperty]
-    private int _resolutionIndex = 0;
-
-    partial void OnResolutionIndexChanged(int value)
-    {
-        RefreshCapture(() => DhyanaObject.SetResolution(value));
-        InitalizeExposure();
-    }
 
     #endregion
 
@@ -365,9 +464,13 @@ public partial class CameraViewModel : ObservableObject
 
     public List<string> RoiMode => new List<string>()
     {
-        "UnSet","1024 X 1024","512 X 512","256 X 256","128 X 128"
+        "None","1024 X 1024","512 X 512","256 X 256","128 X 128"
     };
 
+    public List<string> RoiModeLite => new List<string>()
+    {
+        "None","1024","512","256","128"
+    };
 
     [ObservableProperty]
     private uint _roiModeIndex = 0;
@@ -376,7 +479,7 @@ public partial class CameraViewModel : ObservableObject
     private RoiModel _roiModel = new();
 
     partial void OnRoiModeIndexChanged(uint value)
-        => RefreshCapture(() =>
+        => SetValueWithCapture(() =>
         {
             switch (value)
             {
@@ -388,18 +491,11 @@ public partial class CameraViewModel : ObservableObject
                     var width = 1024 / (int)Math.Pow(2, value - 1);
                     var height = 1024 / (int)Math.Pow(2, value - 1);
                     DhyanaObject.SetRoi(width, height, 0, 0);
+                    RoiEnabled = true;
                     break;
             }
 
-            TUCAM_ROI_ATTR attr = default;
-            DhyanaObject.GetRoi(ref attr);
-
-            RoiModel.HOffset = attr.nHOffset;
-            RoiModel.VOffset = attr.nVOffset;
-            RoiModel.Width = attr.nWidth;
-            RoiModel.Height = attr.nHeight;
-
-            RoiEnabled = attr.bEnable;
+            RefreshRoi();
         });
 
 
@@ -408,15 +504,20 @@ public partial class CameraViewModel : ObservableObject
 
     [RelayCommand]
     void SetRoi()
-        => RefreshCapture(() =>
+        => SetValueWithCapture(() =>
         {
-            if (!RoiEnabled) DhyanaObject.UnSetRoi();
+            RoiModeIndex = 0;
+            if (!RoiEnabled)
+                DhyanaObject.UnSetRoi();
             else
             {
-                RoiModeIndex = 0;
                 DhyanaObject.SetRoi(RoiModel.Width, RoiModel.Height, RoiModel.HOffset, RoiModel.VOffset);
+                RefreshRoi();
             }
+
         });
+
+
 
     #endregion
 
@@ -424,16 +525,30 @@ public partial class CameraViewModel : ObservableObject
 
     private void OnAutoLevelChanged()
     {
-        if (IsAutoLeftLevel && !IsAutoRightLevel) DhyanaObject.SetAutolevels(1);
-        else if (!IsAutoLeftLevel && IsAutoRightLevel) DhyanaObject.SetAutolevels(2);
-        else if (IsAutoLeftLevel && IsAutoRightLevel) DhyanaObject.SetAutolevels(3);
-        else DhyanaObject.SetAutolevels(0);
+        switch (IsAutoLeftLevel)
+        {
+            case true when !IsAutoRightLevel:
+                DhyanaObject.SetAutolevels(1);
+                break;
+            case false when IsAutoRightLevel:
+                DhyanaObject.SetAutolevels(2);
+                break;
+            case true when IsAutoRightLevel:
+                DhyanaObject.SetAutolevels(3);
+                break;
+            default:
+                DhyanaObject.SetAutolevels(0);
+                break;
+        }
+
+        if(!IsAutoLeftLevel&&!IsAutoRightLevel) _levelTimer.Stop();
+        else _levelTimer.Start();
     }
 
+
+
     /// <summary>
-    /// 是否开启直方统计
-    ///
-    /// TODO 这个值没有写进capture里面 另外每一帧变动应该也要更新一下level的值，这个也没写
+    /// 是否开启直方统计 这个默认每次启动相机都去启动
     /// 
     /// </summary>
     [ObservableProperty]
@@ -474,6 +589,21 @@ public partial class CameraViewModel : ObservableObject
     private int _rightLevel = 0;
     #endregion
 
+    #region Noise
+
+    public List<string> NoiseModes => new List<string>()
+    {
+        "Off","Low","Medium","High"
+    };
+
+    [ObservableProperty]
+    private uint _noiseModeIndex = 3;
+
+    partial void OnNoiseModeIndexChanged(uint value)
+        => DhyanaObject.SetNoiseLevel(value);
+
+    #endregion
+
     #region Orientation
 
     [ObservableProperty]
@@ -491,31 +621,7 @@ public partial class CameraViewModel : ObservableObject
 
     #endregion
 
-    #region fans
-
-    /**
-     * Note 关于风扇和温度，这里有一些概念问题亟待了解，暂时不写
-     */
-
-    #endregion
-
-    #region Noise
-
-    public List<string> NoiseModes => new List<string>()
-    {
-        "0","1","2","3"
-    };
-
-    [ObservableProperty]
-    private uint _noiseModeIndex = 0;
-
-    partial void OnNoiseModeIndexChanged(uint value)
-        => DhyanaObject.SetNoiseLevel(value);
-
-    #endregion
-
     #region ImageProperty
-
 
     public List<string> ImageModes => Dhyana.ImageModeRename;
 
@@ -523,7 +629,7 @@ public partial class CameraViewModel : ObservableObject
     private uint _imageModeIndex = 0;
 
     partial void OnImageModeIndexChanged(uint value)
-        => RefreshCapture(() =>
+        => SetValueWithCapture(() =>
         {
             // 这部分完全去按照操作手册里面给的来写
             if (ImageModeIndex == 0)
@@ -562,25 +668,33 @@ public partial class CameraViewModel : ObservableObject
     private int _globalGain = 0;
 
     partial void OnGlobalGainChanged(int value)
-        => RefreshCapture(() => DhyanaObject.SetGlobalGain(GlobalGain));
+        => SetValueWithCapture(() => DhyanaObject.SetGlobalGain(GlobalGain));
 
     [ObservableProperty]
     private int _imageMode = 0;
 
     partial void OnImageModeChanged(int value)
-        => RefreshCapture(() => DhyanaObject.SetImageMode(ImageMode));
+        => SetValueWithCapture(() => DhyanaObject.SetImageMode(ImageMode));
 
     [ObservableProperty]
     private int _gamma = 0;
 
     partial void OnGammaChanged(int value)
-        => RefreshCapture(() => DhyanaObject.SetGamma(Gamma));
+        => SetValueWithCapture(() => DhyanaObject.SetGamma(Gamma));
 
     [ObservableProperty]
     private int _contrast = 0;
 
     partial void OnContrastChanged(int value)
-        => RefreshCapture(() => DhyanaObject.SetContrast(Contrast));
+        => SetValueWithCapture(() => DhyanaObject.SetContrast(Contrast));
+    #endregion
+
+    #region fans
+
+    /**
+     * Note 关于风扇和温度，这里有一些概念问题亟待了解，暂时不写
+     */
+
     #endregion
 
     #region ImageOutput
@@ -630,26 +744,33 @@ public partial class CameraViewModel : ObservableObject
 
             while (timer.IsEnabled)
             {
-                Task.Delay(span);
+                Task.Delay(span).Wait();
             }
         });
     }
 
     void SaveOneFrame()
     {
-        var suffix = SaveModel.IsTimeSuffix ? $"_{System.DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
-        string path = $"{SaveModel.Root}\\{SaveModel.Name}{suffix}";
+        try
+        {
+            var suffix = SaveModel.IsTimeSuffix ? $"_{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
+            var path = $"{SaveModel.Root}\\{SaveModel.Name}{suffix}";
 
-        if (SaveModel.IsRaw)
-            DhyanaObject.SaveCurrentFrame(path, 0);
-        if (SaveModel.IsTif)
-            DhyanaObject.SaveCurrentFrame(path, 1);
-        if (SaveModel.IsPng)
-            DhyanaObject.SaveCurrentFrame(path, 2);
-        if (SaveModel.IsJpg)
-            DhyanaObject.SaveCurrentFrame(path, 3);
-        if (SaveModel.IsBmp)
-            DhyanaObject.SaveCurrentFrame(path, 4);
+            if (SaveModel.IsRaw)
+                DhyanaObject.SaveCurrentFrame(path, 0);
+            if (SaveModel.IsTif)
+                DhyanaObject.SaveCurrentFrame(path, 1);
+            if (SaveModel.IsPng)
+                DhyanaObject.SaveCurrentFrame(path, 2);
+            if (SaveModel.IsJpg)
+                DhyanaObject.SaveCurrentFrame(path, 3);
+            if (SaveModel.IsBmp)
+                DhyanaObject.SaveCurrentFrame(path, 4);
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.ToString());
+        }
     }
 
     [ObservableProperty]
@@ -658,11 +779,18 @@ public partial class CameraViewModel : ObservableObject
     [RelayCommand]
     private void SaveVideo()
     {
-        var suffix = SaveModel.IsTimeSuffix ? $"_{System.DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
-        string path = $"{SaveModel.Root}\\{SaveModel.Name}{suffix}.avi";
+        try
+        {
+            var suffix = SaveModel.IsTimeSuffix ? $"_{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
+            string path = $"{SaveModel.Root}\\{SaveModel.Name}{suffix}.avi";
 
-        var interval = Exposure + 100;
-        DhyanaObject.SaveVideo((int)interval, VideoFps, path);
+            var interval = Exposure + 100;
+            DhyanaObject.SaveVideo((int)interval, VideoFps, path);
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.ToString());
+        }
     }
 
     #endregion

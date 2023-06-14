@@ -52,7 +52,7 @@ public partial class SpinViewModel : ObservableObject
     private bool _isConnected = false;
 
     [ObservableProperty]
-    private bool _isConnectting = true;
+    private bool _isConnecting = true;
 
     partial void OnIsConnectedChanged(bool value)
         => SpinControlEnabled = value;
@@ -60,7 +60,7 @@ public partial class SpinViewModel : ObservableObject
     [RelayCommand]
     public void ConnectCom()
     {
-        IsConnectting = false;
+        IsConnecting = false;
         try
         {
             if (IsConnected)
@@ -73,13 +73,13 @@ public partial class SpinViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            IsConnectting = true;
+            IsConnecting = true;
             IsConnected = false;
             MessageBox.Show("接口出现错误，连接失败");
         }
         finally
         {
-            IsConnectting = true;
+            IsConnecting = true;
         }
 
     }

@@ -68,6 +68,7 @@
                                 <CheckBox
                                     Margin="5"
                                     HorizontalAlignment="Stretch"
+                                    Command="{Binding ConnectCameraCommand}"
                                     Content="连接相机"
                                     DockPanel.Dock="Left"
                                     IsChecked="{Binding CameraFlag}"
@@ -108,7 +109,7 @@
                                 SelectedIndex="{Binding ResolutionIndex, Mode=TwoWay}" />
                         </DockPanel>
 
-                        <DockPanel Margin="5">
+                        <DockPanel Margin="5" IsEnabled="{Binding CameraConnected}">
                             <Label
                                 Width="100"
                                 Height="40"
@@ -119,7 +120,7 @@
                                 SelectedIndex="{Binding ImageModeIndex, Mode=TwoWay}" />
                         </DockPanel>
 
-                        <DockPanel Margin="5">
+                        <DockPanel Margin="5" IsEnabled="{Binding CameraConnected}">
                             <Label
                                 Width="100"
                                 Height="40"

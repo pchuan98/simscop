@@ -256,13 +256,16 @@ public partial class CameraViewModel : ObservableObject
 
     //TODO 这里之后要记得写一个控件，在True和False之间切换会有图像切换
 
+    [RelayCommand]
     void ConnectCamera()
     {
         CameraConnecting = false;
+        CameraFlag = false;
 
         if (CameraFlag)
         {
             CameraConnected = DhyanaObject.InitializeCamera(0);
+            CameraFlag = CameraConnected;
 
             if (!CameraConnected) MessageBox.Show("相机链接失败");
             else AutoLoadOnCameraConnected();

@@ -185,6 +185,8 @@ public partial class CameraViewModel : ObservableObject
     void AutoLoadOnCapture()
     {
         DhyanaObject.SetHistc(true);
+        DhyanaObject.SetAutolevels(0);
+
         IsAutoExposure = true;
         //IsAutoRightLevel = true;
         //IsAutoLeftLevel = true;

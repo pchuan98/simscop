@@ -2,6 +2,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -45,27 +46,27 @@ public partial class ShellViewModel : ObservableObject
     private int _width = 0;
     private int _height = 0;
 
-    private int length = 0;
+    private int _length = 0;
 
-    private int stride = 0;
-    private int offset = 0;
+    private int _stride = 0;
+    private int _offset = 0;
 
     public ShellViewModel()
     {
         WeakReferenceMessenger.Default.Register<DisplayFrame, string>(this, "Display", (s, m) =>
         {
-            System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+            Application.Current?.Dispatcher.Invoke(() =>
             {
 
-                if (_writeable==null || Math.Abs(_height - m.Height) > 0.01 || Math.Abs(_width - m.Width) > 0.01)
+                if (_writeable == null || Math.Abs(_height - m.Height) > 0.01 || Math.Abs(_width - m.Width) > 0.01)
                 {
                     _width = m.Width;
                     _height = m.Height;
 
-                    length = _width * _height;
+                    _length = _width * _height * 3;
 
-                    stride = _width * _height * 3;
-                    offset = _width * 3;
+                    _stride = _width * _height * 3;
+                    _offset = _width * 3;
 
                     _writeable = new WriteableBitmap(_width, _height, 96, 96, PixelFormats.Bgr24, null);
                     ImageFirst = _writeable;
@@ -75,8 +76,8 @@ public partial class ShellViewModel : ObservableObject
                 {
                     _writeable.Lock();
 
-                    Marshal.Copy(m.FrameObject, 0, _writeable.BackBuffer, length);
-                    _writeable.AddDirtyRect(new Int32Rect(0,0,_width,_height));
+                    Marshal.Copy(m.FrameObject, 0, _writeable.BackBuffer, _length);
+                    _writeable.AddDirtyRect(new Int32Rect(0, 0, _width, _height));
 
                 }
                 catch (Exception e)

@@ -68,7 +68,7 @@ public partial class ShellViewModel : ObservableObject
                     offset = _width * 3;
 
                     _writeable = new WriteableBitmap(_width, _height, 96, 96, PixelFormats.Bgr24, null);
-                    _imageFirst = _writeable;
+                    ImageFirst = _writeable;
                 }
 
                 try

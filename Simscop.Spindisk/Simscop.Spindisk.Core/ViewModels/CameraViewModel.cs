@@ -169,23 +169,16 @@ public partial class CameraViewModel : ObservableObject
     /// </summary>
     void AutoLoadOnCameraConnected()
     {
+        Exposure = 10;
     }
 
     void AutoLoadOnCapture()
     {
         DhyanaObject.SetHistc(true);
-
         DhyanaObject.SetAutolevels();
-        IsAutoRightLevel = true;
-        IsAutoLeftLevel = true;
-
-        IsAutoExposure = true;
 
         if (DhyanaObject.GetGamma(out var gamma)) Gamma = gamma;
         if(DhyanaObject.GetContrast(out var contrast)) Contrast=contrast;
-
-
-        
     }
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();
@@ -245,7 +238,7 @@ public partial class CameraViewModel : ObservableObject
                 break;
             default:
                 CaptureFrame();
-                ConnectCamera();
+                //ConnectCamera();
                 break;
         }
     }
@@ -325,7 +318,9 @@ public partial class CameraViewModel : ObservableObject
             DhyanaObject.StartCapture();
 
             _frameTimer.Start();
+            
             _levelTimer.Start();
+
             AutoLoadOnCapture();
         }
         catch (Exception e)
@@ -344,8 +339,8 @@ public partial class CameraViewModel : ObservableObject
     {
         try
         {
-            _frameTimer.Stop();
             _levelTimer.Stop();
+            _frameTimer.Stop();
             DhyanaObject.StopCapture();
         }
         catch (Exception e)
@@ -424,6 +419,9 @@ public partial class CameraViewModel : ObservableObject
 
     #region Exposure
 
+    /// <summary>
+    /// 公用Exposure
+    /// </summary>
     [ObservableProperty]
     private double _exposure = 0;
 
@@ -433,8 +431,9 @@ public partial class CameraViewModel : ObservableObject
 
         if (IsAutoExposure) return;
 
-        DhyanaObject.SetExposure(value);
         ExposureModel.Exposure = value;
+        DhyanaObject.SetExposure(value);
+        
     }
 
     /// <summary>
@@ -460,7 +459,10 @@ public partial class CameraViewModel : ObservableObject
                 double val = -1;
                 DhyanaObject.GetExposure(ref val);
                 GlobalTimerPeriod = val;
+                
                 Exposure = val;
+                ExposureModel.Exposure = val;
+
                 Task.Delay(AutoExposureInterval);
             }
         });

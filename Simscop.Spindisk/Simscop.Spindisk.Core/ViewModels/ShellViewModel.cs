@@ -24,8 +24,8 @@ public partial class ShellViewModel : ObservableObject
         {
             System.Windows.Application.Current?.Dispatcher.Invoke(() =>
             {
-                m.Cv2BitmapImage(out var bitmap);
-                if (bitmap != null) ImageFirst = bitmap;
+                m.ToBitmapSource(out var bitmap);
+                ImageFirst = bitmap;
             });
         });
 

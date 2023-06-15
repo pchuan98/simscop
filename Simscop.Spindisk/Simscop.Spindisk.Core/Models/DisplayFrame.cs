@@ -68,7 +68,17 @@ public class DisplayFrame
 
         Mat mat = new Mat(Height, Width, type, FrameObject);
 
-        source= mat.ToBitmapSource();
+        Mat hsv = new Mat();
+        Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
+
+        // 选择绿色范围内的像素
+        Mat mask = new Mat();
+        Cv2.InRange(hsv, new Scalar(36, 25, 25), new Scalar(86, 255, 255), mask);
+
+        Mat result = new Mat();
+        Cv2.BitwiseAnd(mat, mat, result, mask);
+
+        source = mat.ToBitmapSource();
     }
 
 

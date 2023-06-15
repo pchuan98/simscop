@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simscop.Lib", "..\Simscop.Lib\Simscop.Lib\Simscop.Lib.csproj", "{13C57555-EA33-4ED3-A5AD-C5986F76AAA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{81FB8673-FB31-4C4F-8406-4A3A8D6E154B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81FB8673-FB31-4C4F-8406-4A3A8D6E154B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81FB8673-FB31-4C4F-8406-4A3A8D6E154B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13C57555-EA33-4ED3-A5AD-C5986F76AAA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C57555-EA33-4ED3-A5AD-C5986F76AAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C57555-EA33-4ED3-A5AD-C5986F76AAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C57555-EA33-4ED3-A5AD-C5986F76AAA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{81FB8673-FB31-4C4F-8406-4A3A8D6E154B} = {33C43665-0BC6-46EB-B646-50DB8482A113}
 		{94C26BB3-4DCB-4109-A2B4-38863041FAF3} = {E09C34A1-18B3-4FD9-B796-323D75C55ECE}
 		{63ED047F-2718-4331-9038-5D56D0EA3F16} = {E09C34A1-18B3-4FD9-B796-323D75C55ECE}
+		{13C57555-EA33-4ED3-A5AD-C5986F76AAA7} = {33C43665-0BC6-46EB-B646-50DB8482A113}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CD0A5F91-AE7C-4F5C-A6B0-AF376D9869EC}

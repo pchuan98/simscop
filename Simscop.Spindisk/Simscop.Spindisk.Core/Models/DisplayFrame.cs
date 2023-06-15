@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OpenCvSharp;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using OpenCvSharp.Extensions;
+
 
 namespace Simscop.Spindisk.Core.Models;
 
@@ -56,4 +53,10 @@ public class DisplayFrame
 
         handle.Free();
     }
+
+    // 将 Frame 对象转换为 BitmapImage 对象
+
+
+    public void Cv2BitmapImage(out BitmapImage? source)
+        => Lib.cv.Converter.FromBytes(FrameObject, out source);
 }

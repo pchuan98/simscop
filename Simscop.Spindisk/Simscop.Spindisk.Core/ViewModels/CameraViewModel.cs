@@ -359,15 +359,13 @@ public partial class CameraViewModel : ObservableObject
 
     /// <summary>
     /// 转换软件里面的Frame格式，这里之后可以用来自定义处理数据，然后存储图片和视频也要在这里做一个简单的修订
+    /// NOTE 这里的数据结构依据Capture那里，格式为RAW格式
     /// </summary>
     /// <param name="display"></param>
     /// <param name="frame"></param>
     /// <returns></returns>
     private bool Frame2Bytes(ref DisplayFrame display, TUCAM_FRAME frame)
     {
-
-        // HACK 这里修改Roi的时候会因为未知原因导致一个无法确定的CLR错误
-        // 我的预估是ROI设置导致了某些尺寸没修改导致的
         try
         {
             if (frame.pBuffer == IntPtr.Zero) return false;

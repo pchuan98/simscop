@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls.Ribbon;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Simscop.API.Native;
+using OpenCvSharp;
 using Simscop.Spindisk.Core.Models;
+
 
 namespace Simscop.Spindisk.Core.ViewModels;
 
@@ -31,8 +24,8 @@ public partial class ShellViewModel : ObservableObject
         {
             System.Windows.Application.Current?.Dispatcher.Invoke(() =>
             {
-                m.ToBitmapSource(out var bitmap);
-                ImageFirst = bitmap;
+                m.Cv2BitmapImage(out var bitmap);
+                if (bitmap != null) ImageFirst = bitmap;
             });
         });
 

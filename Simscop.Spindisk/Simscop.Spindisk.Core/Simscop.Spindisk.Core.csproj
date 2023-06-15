@@ -21,6 +21,10 @@
 		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Simscop.Lib\Simscop.Lib\Simscop.Lib.csproj" />
+	</ItemGroup>
+
 	<Import Project="..\..\Simscop.API\Simscop.API.projitems" Label="Shared" />
 
 </Project>

@@ -88,9 +88,9 @@
                             <Setter Property="Opacity" Value="0.6" />
                         </Trigger>
 
-                        <!--<Trigger Property="IsStart" Value="True">
-                            <Setter TargetName="StatusImage" Property="Source" Value="{TemplateBinding StopImage}" />
-                        </Trigger>-->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4" />
+                        </Trigger>
 
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

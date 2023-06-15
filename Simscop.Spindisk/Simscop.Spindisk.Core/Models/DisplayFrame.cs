@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using OpenCvSharp.Extensions;
+using OpenCvSharp.WpfExtensions;
 
 
 namespace Simscop.Spindisk.Core.Models;
@@ -20,6 +21,10 @@ public class DisplayFrame
     public int Width { get; set; } = 0;
 
     public int Stride { get; set; } = 0;
+
+    public byte Depth { get; set; } = 0;
+
+    public byte Channels { get; set; } = 0;
 
     /// <summary>
     /// TODO 这里之后必须得优化
@@ -57,6 +62,14 @@ public class DisplayFrame
     // 将 Frame 对象转换为 BitmapImage 对象
 
 
-    public void Cv2BitmapImage(out BitmapImage? source)
-        => Lib.cv.Converter.FromBytes(FrameObject, out source);
+    public void Test(out BitmapSource source)
+    {
+        int type = MatType.MakeType(Depth, Channels);
+
+        Mat mat = new Mat(Height, Width, type, FrameObject);
+
+        source= mat.ToBitmapSource();
+    }
+
+
 }

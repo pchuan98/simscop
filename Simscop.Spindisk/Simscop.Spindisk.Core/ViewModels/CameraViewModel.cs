@@ -390,12 +390,16 @@ public partial class CameraViewModel : ObservableObject
             Marshal.Copy(frame.pBuffer, raw, 0, size);
 
             Buffer.BlockCopy(raw, frame.usHeader, actualRaw, 0, (int)frame.uiImgSize);
-
+            
 
             display.Height = height;
             display.Width = width;
             display.Stride = stride;
             display.FrameObject = actualRaw;
+
+            display.Depth = frame.ucDepth;
+            display.Channels = frame.ucChannels;
+
         }
         catch (Exception e)
         {

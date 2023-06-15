@@ -12,7 +12,6 @@ using Simscop.API;
 using DhyanaObject = Simscop.API.Dhyana;
 using Simscop.API.Native;
 using System.Windows.Threading;
-using System.Windows.Forms;
 
 namespace Simscop.Spindisk.Core.ViewModels;
 
@@ -91,8 +90,10 @@ public partial class CameraViewModel : ObservableObject
             Task.Run(() =>
             {
                 var display = new DisplayFrame();
-                DhyanaObject.GetCurrentFrame((int)(GlobalTimerPeriod));
-                if (Frame2Bytes(ref display, DhyanaObject.CurrentFrame))
+
+                if (DhyanaObject.GetCurrentFrame((int)(GlobalTimerPeriod))
+                        && Frame2Bytes(ref display, DhyanaObject.CurrentFrame))
+
                     WeakReferenceMessenger.Default.Send<DisplayFrame, string>(display, "Display");
 
             });
@@ -179,7 +180,7 @@ public partial class CameraViewModel : ObservableObject
         DhyanaObject.SetAutolevels();
 
         if (DhyanaObject.GetGamma(out var gamma)) Gamma = gamma;
-        if(DhyanaObject.GetContrast(out var contrast)) Contrast=contrast;
+        if (DhyanaObject.GetContrast(out var contrast)) Contrast = contrast;
     }
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();
@@ -319,7 +320,7 @@ public partial class CameraViewModel : ObservableObject
             DhyanaObject.StartCapture();
 
             _frameTimer.Start();
-            
+
             _levelTimer.Start();
 
             AutoLoadOnCapture();
@@ -434,7 +435,7 @@ public partial class CameraViewModel : ObservableObject
 
         ExposureModel.Exposure = value;
         DhyanaObject.SetExposure(value);
-        
+
     }
 
     /// <summary>
@@ -460,7 +461,7 @@ public partial class CameraViewModel : ObservableObject
                 double val = -1;
                 DhyanaObject.GetExposure(ref val);
                 GlobalTimerPeriod = val;
-                
+
                 Exposure = val;
                 ExposureModel.Exposure = val;
 

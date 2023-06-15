@@ -235,10 +235,13 @@ public partial class CameraViewModel : ObservableObject
         switch (CameraConnected)
         {
             case false:
-                CameraFlag = true;
-                GenerateConnectCameraTask().Wait();
-                IsCapture=true;
-                CaptureFrame();
+                Task.Run(() =>
+                {
+                    CameraFlag = true;
+                    GenerateConnectCameraTask().Wait();
+                    IsCapture = true;
+                    CaptureFrame();
+                });
                 break;
             case true when !IsCapture:
                 IsCapture = true;

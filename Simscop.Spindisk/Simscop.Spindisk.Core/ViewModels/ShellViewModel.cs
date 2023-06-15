@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -45,6 +46,8 @@ public partial class ShellViewModel : ObservableObject
     private int _width = 0;
     private int _height = 0;
 
+    private int length = 0;
+
     private int stride = 0;
     private int offset = 0;
 
@@ -63,6 +66,8 @@ public partial class ShellViewModel : ObservableObject
                     _width = m.Width;
                     _height = m.Height;
 
+                    length = _width * _height;
+
                     stride = _width * _height * 3;
                     offset = _width * 3;
                 }
@@ -71,8 +76,9 @@ public partial class ShellViewModel : ObservableObject
                 {
                     _writeable.Lock();
 
-                    _writeable.WritePixels(new Int32Rect(0, 0, _width, _height),
-                        m.FrameObject, stride, offset);
+                    Marshal.Copy(m.FrameObject, 0, _writeable.BackBuffer, length);
+                    _writeable.AddDirtyRect(new Int32Rect(0,0,_width,_height));
+
                 }
                 catch (Exception e)
                 {
@@ -83,7 +89,6 @@ public partial class ShellViewModel : ObservableObject
                     _writeable.Unlock();
 
                 }
-
 
 
             });

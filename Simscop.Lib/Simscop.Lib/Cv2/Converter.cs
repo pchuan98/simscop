@@ -16,29 +16,29 @@ namespace Simscop.Lib.Cv2;
 public static class Converter
 {
 
-    public static bool FromBytes(byte[] frame,out BitmapImage? image)
-    {
+    //public static bool FromBytes(byte[] frame,out BitmapImage? image)
+    //{
 
-        image = null;
-        if (!FromBytes(frame, out Mat mat)) return false;
+    //    image = null;
+    //    if (!FromBytes(frame, out Mat mat)) return false;
 
-        try
-        {
-            var bitmap = mat.ToBitmap();
-            var memoryStream = new MemoryStream();
-            bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
-            memoryStream.Position = 0;
-            image = new BitmapImage();
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.StreamSource = memoryStream;
-            image.EndInit();
+    //    try
+    //    {
+    //        var bitmap = mat.ToBitmap();
+    //        var memoryStream = new MemoryStream();
+    //        bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
+    //        memoryStream.Position = 0;
+    //        image = new BitmapImage();
+    //        image.BeginInit();
+    //        image.CacheOption = BitmapCacheOption.OnLoad;
+    //        image.StreamSource = memoryStream;
+    //        image.EndInit();
 
-            return true;
-        }
-        catch (Exception e)
-        {
-            throw new Exception("FromBytes", e);
-        }
-    }
+    //        return true;
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        throw new Exception("FromBytes", e);
+    //    }
+    //}
 }

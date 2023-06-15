@@ -12,7 +12,8 @@
     Width="520"
     Height="700"
     ResizeMode="CanResize"
-    Style="{StaticResource TipWindow}">
+    Style="{StaticResource TipWindow}"
+    Topmost="False">
 
     <Window.Resources>
         <SolidColorBrush x:Key="SliderSelectedBrush" Color="#2b42ab" />

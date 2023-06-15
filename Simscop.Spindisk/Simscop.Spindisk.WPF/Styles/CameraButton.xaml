@@ -26,25 +26,6 @@
                             </Border.Background>
                         </Border>
 
-                        <!--<Border
-                            Name="shower"
-                            Margin="25"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <Border.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform />
-                                    <SkewTransform />
-                                    <RotateTransform />
-                                    <TranslateTransform />
-                                </TransformGroup>
-                            </Border.RenderTransform>
-
-                            <controls1:SimplePanel>
-                                <Image x:Name="StartShower" Source="{TemplateBinding StartImage}" />
-                                <Image x:Name="StopShower" Source="{TemplateBinding StopImage}" />
-                            </controls1:SimplePanel>
-                        </Border>-->
 
                         <Grid x:Name="shower" Margin="35">
                             <Grid.RenderTransform>

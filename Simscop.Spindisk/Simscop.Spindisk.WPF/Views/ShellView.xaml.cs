@@ -25,6 +25,8 @@ namespace Simscop.Spindisk.WPF.Views
         private SpinViewModel spinVM;
         private ShellViewModel shellVM;
 
+        private int frameCount = 0;
+        private DateTime lastTime = DateTime.Now;
 
         public ShellView()
         {
@@ -43,6 +45,25 @@ namespace Simscop.Spindisk.WPF.Views
             spinVM = new ();
 
             SetDataContext();
+
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            // 计算帧率
+            frameCount++;
+            var now = DateTime.Now;
+            var elapsed = now - lastTime;
+            if (elapsed >= TimeSpan.FromSeconds(1))
+            {
+                var fps = frameCount / elapsed.TotalSeconds;
+                // 更新界面显示
+                FpsLabel.Text = $"FPS: {fps:F0}";
+                // 重置计数器
+                frameCount = 0;
+                lastTime = now;
+            }
         }
 
         private void SetDataContext()

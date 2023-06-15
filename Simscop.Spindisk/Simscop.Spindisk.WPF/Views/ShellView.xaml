@@ -45,6 +45,8 @@
             <TextBlock Margin="10,0" Text="帮助" />
             <TextBlock Margin="10,0" Text="关于" />
 
+            <TextBlock x:Name="FpsLabel" Margin="10,0" />
+
             <Grid
                 Width="10000"
                 Background="{DynamicResource Region02}"

@@ -65,24 +65,23 @@ public class DisplayFrame
     public void Test(out BitmapSource source)
     {
         int type = MatType.MakeType(Depth, Channels);
-
         Mat mat = new Mat(Height, Width, type, FrameObject);
 
-        Mat color = new Mat();
-        Cv2.CvtColor(mat, color, ColorConversionCodes.GRAY2BGR);
+        //Mat color = new Mat();
+        //Cv2.CvtColor(mat, color, ColorConversionCodes.GRAY2BGR);
 
-        // 将图像从BGR颜色空间转换为HSV颜色空间
-        Mat hsv = new Mat();
-        Cv2.CvtColor(color, hsv, ColorConversionCodes.BGR2HSV);
+        //// 将图像从BGR颜色空间转换为HSV颜色空间
+        //Mat hsv = new Mat();
+        //Cv2.CvtColor(color, hsv, ColorConversionCodes.BGR2HSV);
 
-        // 选择绿色范围内的像素
-        Mat mask = new Mat();
-        Cv2.InRange(hsv, new Scalar(36, 25, 25), new Scalar(86, 255, 255), mask);
+        //// 选择绿色范围内的像素
+        //Mat mask = new Mat();
+        //Cv2.InRange(hsv, new Scalar(36, 25, 25), new Scalar(86, 255, 255), mask);
 
-        Mat result = new Mat();
-        Cv2.BitwiseAnd(color, new Scalar(0, 255, 0), result, mask);
+        //Mat result = new Mat();
+        //Cv2.BitwiseAnd(color, new Scalar(0, 255, 0), result, mask);
 
-        source = result.ToBitmapSource();
+        source = mat.ToBitmapSource();
     }
 
 

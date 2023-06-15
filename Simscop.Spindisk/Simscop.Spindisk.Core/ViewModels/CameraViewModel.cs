@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -235,7 +236,7 @@ public partial class CameraViewModel : ObservableObject
         {
             case false:
                 CameraFlag = true;
-                ConnectCamera();
+                GenerateConnectCameraTask().Wait();
                 IsCapture=true;
                 CaptureFrame();
                 break;
@@ -256,10 +257,8 @@ public partial class CameraViewModel : ObservableObject
 
     //TODO 这里之后要记得写一个控件，在True和False之间切换会有图像切换
 
-    [RelayCommand]
-    void ConnectCamera()
-    {
-        Task.Run(() =>
+    internal Task GenerateConnectCameraTask()
+        => Task.Run(() =>
         {
             CameraConnecting = false;
 
@@ -296,7 +295,9 @@ public partial class CameraViewModel : ObservableObject
 
             CameraConnecting = true;
         });
-    }
+
+    [RelayCommand]
+    void ConnectCamera() => GenerateConnectCameraTask();
 
 
 

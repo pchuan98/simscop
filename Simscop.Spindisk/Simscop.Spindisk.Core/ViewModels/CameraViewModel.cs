@@ -12,6 +12,7 @@ using Simscop.API;
 using DhyanaObject = Simscop.API.Dhyana;
 using Simscop.API.Native;
 using System.Windows.Threading;
+using System.Windows.Forms;
 
 namespace Simscop.Spindisk.Core.ViewModels;
 
@@ -697,25 +698,25 @@ public partial class CameraViewModel : ObservableObject
     private int _globalGain = 0;
 
     partial void OnGlobalGainChanged(int value)
-        => SetValueWithCapture(() => DhyanaObject.SetGlobalGain(GlobalGain));
+        => DhyanaObject.SetGlobalGain(GlobalGain);
 
     [ObservableProperty]
     private int _imageMode = 0;
 
     partial void OnImageModeChanged(int value)
-        => SetValueWithCapture(() => DhyanaObject.SetImageMode(ImageMode));
+        => DhyanaObject.SetImageMode(ImageMode);
 
     [ObservableProperty]
     private double _gamma = 0;
 
     partial void OnGammaChanged(double value)
-        => SetValueWithCapture(() => DhyanaObject.SetGamma(Gamma));
+        => DhyanaObject.SetGamma(Gamma);
 
     [ObservableProperty]
     private double _contrast = 0;
 
     partial void OnContrastChanged(double value)
-        => SetValueWithCapture(() => DhyanaObject.SetContrast(Contrast));
+        => DhyanaObject.SetContrast(Contrast);
     #endregion
 
     #region fans

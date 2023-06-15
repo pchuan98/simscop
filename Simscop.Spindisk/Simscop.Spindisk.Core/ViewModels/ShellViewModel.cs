@@ -59,9 +59,6 @@ public partial class ShellViewModel : ObservableObject
 
                 if (_writeable==null || Math.Abs(_height - m.Height) > 0.01 || Math.Abs(_width - m.Width) > 0.01)
                 {
-                    _writeable = new WriteableBitmap(_width, _height, 96, 96, PixelFormats.Bgr24, null);
-                    _imageFirst = _writeable;
-
                     _width = m.Width;
                     _height = m.Height;
 
@@ -69,6 +66,9 @@ public partial class ShellViewModel : ObservableObject
 
                     stride = _width * _height * 3;
                     offset = _width * 3;
+
+                    _writeable = new WriteableBitmap(_width, _height, 96, 96, PixelFormats.Bgr24, null);
+                    _imageFirst = _writeable;
                 }
 
                 try

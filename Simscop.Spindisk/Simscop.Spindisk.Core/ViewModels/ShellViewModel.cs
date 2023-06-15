@@ -40,8 +40,7 @@ public partial class ShellViewModel : ObservableObject
     [ObservableProperty]
     private ImageSource? _imageFirst;
 
-    WriteableBitmap _writeable
-        = new WriteableBitmap(0, 0, 96, 96, PixelFormats.Bgr24, null);
+    WriteableBitmap? _writeable = null;
 
     private int _width = 0;
     private int _height = 0;
@@ -58,7 +57,7 @@ public partial class ShellViewModel : ObservableObject
             System.Windows.Application.Current?.Dispatcher.Invoke(() =>
             {
 
-                if (Math.Abs(_height - m.Height) > 0.01 || Math.Abs(_width - m.Width) > 0.01)
+                if (_writeable==null || Math.Abs(_height - m.Height) > 0.01 || Math.Abs(_width - m.Width) > 0.01)
                 {
                     _writeable = new WriteableBitmap(_width, _height, 96, 96, PixelFormats.Bgr24, null);
                     _imageFirst = _writeable;

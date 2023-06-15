@@ -234,15 +234,20 @@ public partial class CameraViewModel : ObservableObject
         switch (CameraConnected)
         {
             case false:
+                CameraFlag = true;
                 ConnectCamera();
+                IsCapture=true;
                 CaptureFrame();
                 break;
             case true when !IsCapture:
+                IsCapture = true;
+                CaptureFrame();
+                break;
+            case true when IsCapture:
+                IsCapture=false;
                 CaptureFrame();
                 break;
             default:
-                CaptureFrame();
-                //ConnectCamera();
                 break;
         }
     }

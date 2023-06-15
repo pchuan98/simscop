@@ -171,7 +171,7 @@ public partial class CameraViewModel : ObservableObject
     /// </summary>
     void AutoLoadOnCameraConnected()
     {
-        Exposure = 10;
+        Exposure = 100;
     }
 
     void AutoLoadOnCapture()
@@ -181,6 +181,8 @@ public partial class CameraViewModel : ObservableObject
 
         if (DhyanaObject.GetGamma(out var gamma)) Gamma = gamma;
         if (DhyanaObject.GetContrast(out var contrast)) Contrast = contrast;
+
+        IsAutoExposure = true;
     }
 
     public DhyanaInfoModel DhyanaInfo { get; set; } = new();

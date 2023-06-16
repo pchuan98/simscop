@@ -10,8 +10,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Helper\SerialHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MshotMotor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Native\Dhyana\TUCamAPI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dhyana.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Native\Mshot\Constant.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Native\Mshot\Motor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XLight.cs" />
   </ItemGroup>
   <ItemGroup>

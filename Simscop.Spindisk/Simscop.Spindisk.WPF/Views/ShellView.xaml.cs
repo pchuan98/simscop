@@ -10,7 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes; 
+using System.Windows.Shapes;
 using Simscop.Spindisk.Core.ViewModels;
 using CameraViewModel = Simscop.Spindisk.Core.ViewModels.CameraViewModel;
 
@@ -105,17 +105,12 @@ namespace Simscop.Spindisk.WPF.Views
 
         }
 
+        // TODO 这里的卡顿问题已经定位了，原因就是在给datacontext的时候数据变化和赋值原因，解决办法挺简单的，单个窗口重复利用就行，但是这里目前就卡着吧，有空再改
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            Task.Run(() =>
-            {
-                var window = new CameraView
-                {
-                    DataContext = cameraVM
-                };
-
-                window.Show();
-            });
+            CameraView view = new();
+            view.Show();
+            view.DataContext = cameraVM;
         }
 
         protected override void OnClosed(EventArgs e)

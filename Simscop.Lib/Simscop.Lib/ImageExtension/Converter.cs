@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using OpenCvSharp.Extensions;
 
-namespace Simscop.Lib.Cv2;
+namespace Simscop.Lib.ImageExtension;
 
 
 public static class Converter

@@ -68,12 +68,8 @@ public class DisplayFrame
         int type = MatType.MakeType(Depth, Channels);
         var mat = new Mat(Height, Width, type, FrameObject);
 
-        var gray = new Mat();
-        Cv2.CvtColor(mat, gray, ColorConversionCodes.BGR2GRAY);
-
         var dst = new Mat();
-        Cv2.ApplyColorMap(gray, dst, Simscop.Lib.Cv2.ColorMaps.Green);
-
+        Cv2.ApplyColorMap(mat, dst, Lib.ImageExtension.ColorMaps.Green);
 
         source = dst.ToBitmapSource();
     }

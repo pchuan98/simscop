@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Window = System.Windows.Window;
+using Cv2 = OpenCvSharp.Cv2;
 
 namespace Simscop.Lib.Sample
 {
@@ -42,26 +43,16 @@ namespace Simscop.Lib.Sample
             Cv2.CvtColor(img, gray, ColorConversionCodes.BGR2GRAY);
 
             Mat enhance = new Mat();
-
-            Mat customColorMap = new Mat(256, 1, MatType.CV_8UC3);
-            for (int i = 0; i < 256; i++)
-            {
-                customColorMap.Set(i, 0, new Vec3b((byte)0, (byte)i, (byte)0));
-            }
-
             Cv2.EqualizeHist(gray, enhance);
-
-            Mat single = new Mat(1, 256, MatType.CV_8UC1, new Scalar(0,255,0));
-
 
             var dst = new Mat();
 
-            Cv2.ApplyColorMap(enhance, dst, customColorMap);
+            Cv2.ApplyColorMap(img, dst, ImageExtension.ColorMaps.Blue);
             //Cv2.LUT(gray,single,dst);
 
 
-            ImageShower1.Source = gray.ToBitmapSource();
-            ImageShower2.Source = enhance.ToBitmapSource();
+            ImageShower1.Source = img.ToBitmapSource();
+            ImageShower2.Source = dst.ToBitmapSource();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Simscop.Spindisk.Core.Models;
@@ -65,11 +66,16 @@ public class DisplayFrame
     public void Test(out BitmapSource source)
     {
         int type = MatType.MakeType(Depth, Channels);
-        Mat mat = new Mat(Height, Width, type, FrameObject);
+        var mat = new Mat(Height, Width, type, FrameObject);
 
-        
+        var gray = new Mat();
+        Cv2.CvtColor(mat, gray, ColorConversionCodes.BGR2GRAY);
 
-        source = mat.ToBitmapSource();
+        var dst = new Mat();
+        Cv2.ApplyColorMap(gray, dst, Simscop.Lib.Cv2.ColorMaps.Green);
+
+
+        source = dst.ToBitmapSource();
     }
 
 

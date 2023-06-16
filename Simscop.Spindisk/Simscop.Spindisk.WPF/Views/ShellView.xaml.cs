@@ -107,12 +107,15 @@ namespace Simscop.Spindisk.WPF.Views
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            var window = new CameraView
+            Task.Run(() =>
             {
-                DataContext = cameraVM
-            };
+                var window = new CameraView
+                {
+                    DataContext = cameraVM
+                };
 
-            window.Show();
+                window.Show();
+            });
         }
 
         protected override void OnClosed(EventArgs e)

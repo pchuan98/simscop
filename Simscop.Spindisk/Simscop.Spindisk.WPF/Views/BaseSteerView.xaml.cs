@@ -15,7 +15,17 @@ namespace Simscop.Spindisk.WPF.Views
     public partial class BaseSteerView : UserControl
     {
         public const int TimerInterval = 100;
+
         private readonly DispatcherTimer _rightTimer;
+        private readonly DispatcherTimer _rightBottomTimer;
+        private readonly DispatcherTimer _bottomTimer;
+        private readonly DispatcherTimer _leftBottomTimer;
+        private readonly DispatcherTimer _leftTimer;
+        private readonly DispatcherTimer _leftTopTimer;
+        private readonly DispatcherTimer _topTimer;
+        private readonly DispatcherTimer _rightTopTimer;
+        private readonly DispatcherTimer _upTimer;
+        private readonly DispatcherTimer _downTimer;
 
         public SteerViewModel? Vm => DataContext as SteerViewModel;
 
@@ -23,115 +33,105 @@ namespace Simscop.Spindisk.WPF.Views
         {
             InitializeComponent();
             this.DataContext = null;
-            this.DataContextChanged += BaseSteerView_DataContextChanged;
 
             _rightTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
             {
                 Interval = TimeSpan.FromMilliseconds(TimerInterval)
             };
 
-            _rightTimer.Tick += (s, e) => Vm?.MoveX(Vm.XyStep);
+            _rightTimer.Tick += (s, e) => Vm?.MoveX(-Vm.XyStep);
 
-            this.RightMoveBt.PreviewMouseDown += (s, e) => _rightTimer.Stop(); ;
-            this.RightMoveBt.PreviewMouseUp += (s, e) => _rightTimer.Start(); 
+            RightMoveBt.PreviewMouseDown += (s, e) => _rightTimer.Start(); ;
+            RightMoveBt.PreviewMouseUp += (s, e) => _rightTimer.Stop();
 
+            _rightBottomTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _rightBottomTimer.Tick += (s, e) =>
+            {
+                Vm?.MoveX(Vm.XyStep);
+                Vm?.MoveY(Vm.XyStep);
+            };
+            RightBottomMoveBt.PreviewMouseDown += (s, e) => _rightBottomTimer.Start();
+            RightBottomMoveBt.PreviewMouseUp += (s, e) => _rightBottomTimer.Stop();
 
-        }
+            _bottomTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _bottomTimer.Tick += (s, e) => Vm?.MoveY(Vm.XyStep);
+            BottomMoveBt.PreviewMouseDown += (s, e) => _bottomTimer.Start();
+            BottomMoveBt.PreviewMouseUp += (s, e) => _bottomTimer.Stop();
 
-        private void BaseSteerView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            //if (sender is not BaseSteerView view) return;
-            //if (view.DataContext is not Core.ViewModels.SteerViewModel vm) return;
+            _leftBottomTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _leftBottomTimer.Tick += (s, e) =>
+            {
+                Vm?.MoveX(-Vm.XyStep);
+                Vm?.MoveY(Vm.XyStep);
+            };
+            LeftBottomMoveBt.PreviewMouseDown += (s, e) => _leftBottomTimer.Start();
+            LeftBottomMoveBt.PreviewMouseUp += (s, e) => _leftBottomTimer.Stop();
 
+            _leftTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _leftTimer.Tick += (s, e) => Vm?.MoveX(Vm.XyStep);
+            LeftMoveBt.PreviewMouseDown += (s, e) => _leftTimer.Start();
+            LeftMoveBt.PreviewMouseUp += (s, e) => _leftTimer.Stop();
 
-            //var btList = new List<IconButton>()
-            //{
-            //    RightMoveBt,RightBottomMoveBt,
-            //    BottomMoveBt,LeftBottomMoveBt,
-            //    LeftMoveBt,LeftTopMoveBt,
-            //    TopMoveBt,RightTopMoveBt,
-            //    UpMoveBt,DownMoveBt
-            //};
+            _leftTopTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _leftTopTimer.Tick += (s, e) =>
+            {
+                Vm?.MoveX(Vm.XyStep);
+                Vm?.MoveY(-Vm.XyStep);
+            };
+            LeftTopMoveBt.PreviewMouseDown += (s, e) => _leftTopTimer.Start();
+            LeftTopMoveBt.PreviewMouseUp += (s, e) => _leftTopTimer.Stop();
 
-            //var actions = new List<Action<double>>
-            //{
-            //    MoveX,
+            _topTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _topTimer.Tick += (s, e) => Vm?.MoveY(-Vm.XyStep);
+            TopMoveBt.PreviewMouseDown += (s, e) => _topTimer.Start();
+            TopMoveBt.PreviewMouseUp += (s, e) => _topTimer.Stop();
 
-            //    v =>
-            //    {
-            //        MoveX(v);
-            //        MoveY(-v);
-            //    },
+            _rightTopTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _rightTopTimer.Tick += (s, e) =>
+            {
+                Vm?.MoveX(-Vm.XyStep);
+                Vm?.MoveY(-Vm.XyStep);
+            };
+            RightTopMoveBt.PreviewMouseDown += (s, e) => _rightTopTimer.Start();
+            RightTopMoveBt.PreviewMouseUp += (s, e) => _rightTopTimer.Stop();
 
-            //    v=>MoveY(-v),
+            _upTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _upTimer.Tick += (s, e) => Vm?.MoveZ(Vm.ZStep);
+            UpMoveBt.PreviewMouseDown += (s, e) => _upTimer.Start();
+            UpMoveBt.PreviewMouseUp += (s, e) => _upTimer.Stop();
 
-            //    v =>
-            //    {
-            //        MoveX(-v);
-            //        MoveY(-v);
-            //    },
+            _downTimer = new DispatcherTimer(priority: DispatcherPriority.Render)
+            {
+                Interval = TimeSpan.FromMilliseconds(TimerInterval)
+            };
+            _downTimer.Tick += (s, e) => Vm?.MoveZ(-Vm.ZStep);
+            DownMoveBt.PreviewMouseDown += (s, e) => _downTimer.Start();
+            DownMoveBt.PreviewMouseUp += (s, e) => _downTimer.Stop();
 
-            //    v => MoveX(-v),
-
-            //    v =>
-            //    {
-            //        MoveX(-v);
-            //        MoveY(v);
-            //    },
-
-            //    MoveY,
-
-            //    v =>
-            //    {
-            //        MoveX(v);
-            //        MoveY(v);
-            //    },
-            //};
-
-            //var valList = new List<double>()
-            //{
-            //    vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.ZStep,vm.ZStep
-            //};
-
-            //for (var i = 0; i < 10; i++)
-            //{
-            //    var timer = new DispatcherTimer(priority: DispatcherPriority.Render)
-            //    {
-            //        Interval = TimeSpan.FromMilliseconds(TimerInterval),
-            //    };
-
-            //    var index = i;
-            //    timer.Tick += (s, args) =>
-            //        actions[index](valList[index]);
-
-            //    btList[i].PreviewMouseLeftButtonDown += (s, args) =>
-            //        timer.Start();
-
-            //    btList[i].PreviewMouseLeftButtonUp += (s, args) =>
-            //        timer.Stop();
-
-            //}
-        }
-
-        private void MoveX(double value)
-        {
-            if (DataContext is not Core.ViewModels.SteerViewModel vm) return;
-
-            vm.MoveX(value);
-        }
-
-        private void MoveY(double value)
-        {
-            if (DataContext is not Core.ViewModels.SteerViewModel vm) return;
-
-            vm.MoveY(value);
-        }
-
-        private void MoveZ(double value)
-        {
-            if (DataContext is not Core.ViewModels.SteerViewModel vm) return;
-
-            vm.MoveZ(value);
         }
     }
 }

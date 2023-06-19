@@ -6,7 +6,10 @@ namespace Simscop.API;
 
 public class MshotMotor
 {
-    private const double Factor = 1.0;
+    /// <summary>
+    /// 转成um单位
+    /// </summary>
+    private const double Factor = 20.0;
 
     private const uint XAddress = 1;
 
@@ -14,11 +17,6 @@ public class MshotMotor
 
     private const uint ZAddress = 3;
 
-    public bool XEnable { get; set; } = false;
-
-    public bool YEnable { get; set; } = false;
-
-    public bool ZEnable { get; set; } = false;
 
     public bool InitializeMotor()
     {
@@ -26,10 +24,10 @@ public class MshotMotor
 
         Motor.SetControlAxis(MshotAxis.ALL);
 
-        return Motor.AxisEnable(1, true)
-            && Motor.AxisEnable(2, true)
-            && Motor.AxisEnable(3, true);
+        return false;
     }
+
+    #region Position
 
     public double X
     {
@@ -45,6 +43,65 @@ public class MshotMotor
     {
         get => (double)Motor.ReadPosition(ZAddress) / Factor;
     }
+
+    #endregion
+
+    #region Enable
+
+    public bool XEnabled
+    {
+        get => Motor.GetAxisStatus(XAddress, MshotAxisStatus.ENABLE);
+    }
+
+    public bool YEnabled
+    {
+        get => Motor.GetAxisStatus(YAddress, MshotAxisStatus.ENABLE);
+    }
+
+    public bool ZEnabled
+    {
+        get => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.ENABLE);
+    }
+
+    #endregion
+
+    #region Action
+
+    public bool XAction
+    {
+        get => Motor.GetAxisStatus(XAddress, MshotAxisStatus.ACTION);
+    }
+
+    public bool YAction
+    {
+        get => Motor.GetAxisStatus(YAddress, MshotAxisStatus.ACTION);
+    }
+
+    public bool ZAction
+    {
+        get => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.ACTION);
+    }
+
+    #endregion
+
+    #region Exception
+
+    public bool XException
+    {
+        get => Motor.GetAxisStatus(XAddress, MshotAxisStatus.CONTROL);
+    }
+
+    public bool YException
+    {
+        get => Motor.GetAxisStatus(YAddress, MshotAxisStatus.CONTROL);
+    }
+
+    public bool ZException
+    {
+        get => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.CONTROL);
+    }
+
+    #endregion
 
     public bool SetOffset(uint axis, double value)
     {

@@ -253,15 +253,7 @@ public static class Motor
     [DllImport(DllName, EntryPoint = "DLL_GetAxisStatus", CallingConvention = CallingConvention.StdCall)]
     public static extern int GetAxisStatus(uint address, int statusNum);
 
-    /// <summary>
-    /// 查询指定轴的运动状态
-    /// </summary>
-    /// <param name="address"></param>
-    /// <param name="status"></param>
-    /// <returns>
-    /// 1是，0否，-1 设置失败
-    /// </returns>
-    [DllImport(DllName, EntryPoint = "DLL_GetAxisStatus", CallingConvention = CallingConvention.StdCall)]
-    public static extern int GetAxisStatus(uint address, MshotAxisStatus status);
+    public static bool GetAxisStatus(uint address, MshotAxisStatus status)
+        => LoadErrorMessage(() => GetAxisStatus(address, (int)status));
 
 }

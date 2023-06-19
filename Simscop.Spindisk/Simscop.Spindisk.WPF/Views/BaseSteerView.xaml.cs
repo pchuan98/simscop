@@ -1,19 +1,8 @@
 ﻿using Simscop.UI.Controls;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace Simscop.Spindisk.WPF.Views
@@ -84,8 +73,6 @@ namespace Simscop.Spindisk.WPF.Views
                 },
             };
 
-            var timers = new List<DispatcherTimer>();
-
             var valList = new List<double>()
             {
                 vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.XyStep,vm.ZStep,vm.ZStep
@@ -93,20 +80,20 @@ namespace Simscop.Spindisk.WPF.Views
 
             for (var i = 0; i < 10; i++)
             {
-                timers[i] = new DispatcherTimer(priority: DispatcherPriority.Render)
+                var timer = new DispatcherTimer(priority: DispatcherPriority.Render)
                 {
                     Interval = TimeSpan.FromMilliseconds(TimerInterval),
                 };
 
                 var index = i;
-                timers[i].Tick += (s, args) =>
+                timer.Tick += (s, args) =>
                     actions[index](valList[index]);
 
                 btList[i].PreviewMouseLeftButtonDown += (s, args) =>
-                    timers[index].Start();
+                    timer.Start();
                 
                 btList[i].PreviewMouseLeftButtonUp += (s, args) =>
-                    timers[index].Stop();
+                    timer.Stop();
                 
             }
         }

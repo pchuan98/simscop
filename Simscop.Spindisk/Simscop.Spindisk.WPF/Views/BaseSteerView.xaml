@@ -7,7 +7,6 @@
     xmlns:local="clr-namespace:Simscop.Spindisk.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Simscop.Spindisk.Core.ViewModels;assembly=Simscop.Spindisk.Core"
-    d:DataContext="{d:DesignInstance vm:SteerViewModel}"
     mc:Ignorable="d">
 
     <Grid IsEnabled="{Binding IsConnected}">

@@ -24,6 +24,7 @@ namespace Simscop.Spindisk.WPF.Views
         private CameraViewModel cameraVM;
         private SpinViewModel spinVM;
         private ShellViewModel shellVM;
+        private SteerViewModel steerVM;
 
         private int frameCount = 0;
         private DateTime lastTime = DateTime.Now;
@@ -40,9 +41,10 @@ namespace Simscop.Spindisk.WPF.Views
 
             
 
-            cameraVM = new ();
-            shellVM = new ();
-            spinVM = new ();
+            cameraVM =  new CameraViewModel();
+            shellVM =  new ShellViewModel();
+            spinVM = new SpinViewModel();
+            steerVM = new SteerViewModel();
 
             SetDataContext();
 
@@ -71,6 +73,7 @@ namespace Simscop.Spindisk.WPF.Views
             this.DataContext = shellVM;
             this.BaseCameraControl.DataContext = cameraVM;
             this.SpinControl.DataContext = spinVM;
+            this.SteerControl.DataContext= steerVM;
         }
 
         private bool IsFull { get; set; } = false;

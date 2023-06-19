@@ -96,7 +96,7 @@
                             </controls:SimplePanel>
 
                             <Grid Grid.Column="2">
-                                <local:BaseSteerView />
+                                <local:BaseSteerView x:Name="SteerControl" />
                             </Grid>
                         </Grid>
                     </Border>

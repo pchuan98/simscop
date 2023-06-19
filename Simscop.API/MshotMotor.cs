@@ -140,9 +140,9 @@ public class MshotMotor
 
     public void ResetPosition()
     {
-        Motor.SetZeroPosition(XAddress);
-        Motor.SetZeroPosition(YAddress);
-        Motor.SetZeroPosition(ZAddress);
+        Motor.PositionAbsoluteMove(XAddress,0);
+        Motor.PositionAbsoluteMove(YAddress, 0);
+        Motor.PositionAbsoluteMove(ZAddress, 0);
     }
 
     ~MshotMotor()

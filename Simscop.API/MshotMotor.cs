@@ -1,16 +1,18 @@
 ﻿using Simscop.API.Native.Mshot;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Motor = Simscop.API.Native.Mshot.Motor;
-using System.Security.Cryptography;
-using OpenCvSharp;
 
 namespace Simscop.API;
 
 public class MshotMotor
 {
-    private const double Factor = 20.0;
+    private const double Factor = 1.0;
+
+    private const uint XAddress = 1;
+
+    private const uint YAddress = 2;
+
+    private const uint ZAddress = 3;
 
     public bool XEnable { get; set; } = false;
 
@@ -31,17 +33,17 @@ public class MshotMotor
 
     public double X
     {
-        get => ((double)Motor.ReadPosition(1) / Factor);
+        get => ((double)Motor.ReadPosition(XAddress) / Factor);
     }
 
     public double Y
     {
-        get => (double)Motor.ReadPosition(2) / Factor;
+        get => (double)Motor.ReadPosition(YAddress) / Factor;
     }
 
     public double Z
     {
-        get => (double)Motor.ReadPosition(3) / Factor;
+        get => (double)Motor.ReadPosition(ZAddress) / Factor;
     }
 
     public bool SetOffset(uint axis, double value)
@@ -68,10 +70,6 @@ public class MshotMotor
 
     ~MshotMotor()
     {
-        Motor.SetZeroPosition(1);
-        Motor.SetZeroPosition(2);
-        Motor.SetZeroPosition(3);
-
-        //Motor.OpenQk(0);
+        Motor.OpenQk(0);
     }
 }

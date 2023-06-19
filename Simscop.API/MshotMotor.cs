@@ -72,6 +72,6 @@ public class MshotMotor
         Motor.SetZeroPosition(2);
         Motor.SetZeroPosition(3);
 
-        Motor.OpenQk(0);
+        //Motor.OpenQk(0);
     }
 }

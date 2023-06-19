@@ -319,10 +319,10 @@
                                 Style="{StaticResource CheckBoxAsButton}" />
                             <controls:RangeSlider
                                 Margin="10"
-                                EndValue="{Binding RightLevel}"
+                                EndValue="{Binding RightLevel, Mode=TwoWay}"
                                 Maximum="65534"
                                 Minimum="0"
-                                StartValue="{Binding LeftLevel}" />
+                                StartValue="{Binding LeftLevel, Mode=TwoWay}" />
 
                         </DockPanel>
 

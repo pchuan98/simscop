@@ -2,12 +2,32 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Documents;
 
 namespace Simscop.API.Native.Mshot;
 
 public static class Motor
 {
     private const string DllName = "SerialCom.dll";
+
+    public static MshotErrorCode ErrorMessage { get; set; } = MshotErrorCode.NONE;
+
+    private static bool LoadErrorMessage(Func<int> action)
+    {
+        if (action() == 1) return true;
+
+        var code = GetError();
+        ErrorMessage = Enum.IsDefined(typeof(MshotErrorCode), code) ? (MshotErrorCode)code : MshotErrorCode.NO_DEFINE;
+
+        return false;
+    }
+
+    /// <summary>
+    /// 获取版本
+    /// </summary>
+    /// <returns></returns>
+    [DllImport(DllName, EntryPoint = "GetDllVersion", CallingConvention = CallingConvention.StdCall)]
+    public static extern uint GetDLLVersion();
 
     /// <summary>
     /// 打开驱控设备(可以自动查找设备)
@@ -19,6 +39,9 @@ public static class Motor
     /// </returns>
     [DllImport(DllName, EntryPoint = "DLL_OpenQK", CallingConvention = CallingConvention.StdCall)]
     public static extern int OpenQk(int isOpen);
+
+    public static bool OpenQk(bool isOpen)
+        => LoadErrorMessage(() => OpenQk(isOpen ? 1 : 0));
 
     /// <summary>
     /// 打开串口
@@ -70,6 +93,9 @@ public static class Motor
     [DllImport(DllName, EntryPoint = "DLL_AxisEnable", CallingConvention = CallingConvention.StdCall)]
     public static extern int AxisEnable(uint address, char kg);
 
+    public static bool AxisEnable(uint address, bool isEnable)
+        => LoadErrorMessage(() => AxisEnable(address, isEnable ? 'K' : 'G'));
+
     /// <summary>
     /// 相对移动(以当前平台当前位置为参考进行移动)
     /// </summary>
@@ -117,7 +143,7 @@ public static class Motor
     /// </param>
     /// <returns></returns>
     [DllImport(DllName, EntryPoint = "JOG_Move", CallingConvention = CallingConvention.StdCall)]
-    public static extern int JogMove(uint address,char cmd);
+    public static extern int JogMove(uint address, char cmd);
 
     /// <summary>
     /// 读取最近一次软件配置错误信息

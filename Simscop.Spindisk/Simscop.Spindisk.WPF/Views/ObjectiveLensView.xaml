@@ -28,7 +28,7 @@
                 Height="80"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                BottomLabel="/0.45"
+                BottomLabel="/0.25"
                 TopLabel="10x" />
 
             <controls:ObjectiveRadioButton
@@ -44,7 +44,7 @@
                 Height="80"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                BottomLabel="/0.13"
+                BottomLabel="/0.65"
                 IsChecked="True"
                 TopLabel="40x" />
 

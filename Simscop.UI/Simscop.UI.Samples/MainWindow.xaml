@@ -23,7 +23,16 @@
         VerticalScrollBarVisibility="Visible">
 
 
-        <StackPanel>
+        <StackPanel Background="Black">
+
+            <StackPanel.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="删除" />
+                    <MenuItem Header="删除" />
+                    <MenuItem Header="删除" />
+                </ContextMenu>
+            </StackPanel.ContextMenu>
+
             <Grid Width="1500" Height="1" />
             <Grid
                 Width="300"

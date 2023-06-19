@@ -105,7 +105,7 @@
                     Margin="10,0,0,5"
                     HorizontalAlignment="Left"
                     FontSize="12"
-                    Text="TRITC-562nm" />
+                    Text="TRITC-561nm" />
 
                 <Grid Margin="5,0,10,0">
                     <Grid.ColumnDefinitions>

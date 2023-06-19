@@ -138,6 +138,13 @@ public class MshotMotor
 
     #endregion
 
+    public void ResetPosition()
+    {
+        Motor.SetZeroPosition(XAddress);
+        Motor.SetZeroPosition(YAddress);
+        Motor.SetZeroPosition(ZAddress);
+    }
+
     ~MshotMotor()
     {
         Motor.OpenQk(0);

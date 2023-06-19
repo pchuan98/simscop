@@ -20,10 +20,9 @@ public class MshotMotor
 
     public bool InitializeMotor()
     {
-        if (!Motor.OpenQk(true)) return false;
-
         Motor.SetControlAxis(MshotAxis.ALL);
 
+        if (!Motor.OpenQk(true)) return false;
         return false;
     }
 

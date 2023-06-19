@@ -1,5 +1,6 @@
 ﻿using Simscop.API.Native.Mshot;
 using System;
+using System.Net;
 using Motor = Simscop.API.Native.Mshot.Motor;
 
 namespace Simscop.API;
@@ -23,16 +24,25 @@ public class MshotMotor
         Motor.SetControlAxis(MshotAxis.ALL);
 
         if (!Motor.OpenQk(true)) return false;
-        return false;
+
+        // NOTE 这里的true和false因为这个sdk的神奇之处，没有一丢丢参考价值
+        Motor.AxisEnable(XAddress, true);
+        Motor.AxisEnable(YAddress, true);
+        Motor.AxisEnable(ZAddress, true);
+
+        return true;
     }
 
     #region Position
 
-    public double X => ((double)Motor.ReadPosition(XAddress) / Factor);
+    public double X
+        => (double)Motor.ReadPosition(XAddress) / Factor;
 
-    public double Y => (double)Motor.ReadPosition(YAddress) / Factor;
+    public double Y
+        => (double)Motor.ReadPosition(YAddress) / Factor;
 
-    public double Z => (double)Motor.ReadPosition(ZAddress) / Factor;
+    public double Z
+        => (double)Motor.ReadPosition(ZAddress) / Factor;
 
     #endregion
 
@@ -57,33 +67,31 @@ public class MshotMotor
 
     #region Action 舵机状态
 
-    public bool XAction
-    {
-        get => Motor.GetAxisStatus(XAddress, MshotAxisStatus.ACTION);
-    }
+    public bool XAction 
+        => Motor.GetAxisStatus(XAddress, MshotAxisStatus.ACTION);
 
-    public bool YAction
-    {
-        get => Motor.GetAxisStatus(YAddress, MshotAxisStatus.ACTION);
-    }
+    public bool YAction 
+        => Motor.GetAxisStatus(YAddress, MshotAxisStatus.ACTION);
 
-    public bool ZAction
-    {
-        get => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.ACTION);
-    }
+    public bool ZAction 
+        => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.ACTION);
 
     #endregion
 
     #region Exception
 
-    public bool XException => Motor.GetAxisStatus(XAddress, MshotAxisStatus.CONTROL);
+    public bool XException 
+        => Motor.GetAxisStatus(XAddress, MshotAxisStatus.CONTROL);
 
-    public bool YException => Motor.GetAxisStatus(YAddress, MshotAxisStatus.CONTROL);
+    public bool YException 
+        => Motor.GetAxisStatus(YAddress, MshotAxisStatus.CONTROL);
 
-
-    public bool ZException => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.CONTROL);
+    public bool ZException 
+        => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.CONTROL);
 
     #endregion
+
+    #region 相对位移
 
     public bool SetOffset(uint axis, double value)
     {
@@ -105,7 +113,9 @@ public class MshotMotor
     public bool SetZOffset(double value)
         => SetOffset(ZAddress, value);
 
+    #endregion
 
+    #region 绝对路径
     public bool SetPosition(uint axis, double value)
     {
         var position = (int)(value * Factor);
@@ -125,6 +135,8 @@ public class MshotMotor
 
     public bool SetZPosition(double value)
         => SetPosition(ZAddress, value);
+
+    #endregion
 
     ~MshotMotor()
     {

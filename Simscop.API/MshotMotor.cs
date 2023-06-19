@@ -28,20 +28,11 @@ public class MshotMotor
 
     #region Position
 
-    public double X
-    {
-        get => ((double)Motor.ReadPosition(XAddress) / Factor);
-    }
+    public double X => ((double)Motor.ReadPosition(XAddress) / Factor);
 
-    public double Y
-    {
-        get => (double)Motor.ReadPosition(YAddress) / Factor;
-    }
+    public double Y => (double)Motor.ReadPosition(YAddress) / Factor;
 
-    public double Z
-    {
-        get => (double)Motor.ReadPosition(ZAddress) / Factor;
-    }
+    public double Z => (double)Motor.ReadPosition(ZAddress) / Factor;
 
     #endregion
 
@@ -64,7 +55,7 @@ public class MshotMotor
 
     #endregion
 
-    #region Action
+    #region Action 舵机状态
 
     public bool XAction
     {
@@ -85,20 +76,12 @@ public class MshotMotor
 
     #region Exception
 
-    public bool XException
-    {
-        get => Motor.GetAxisStatus(XAddress, MshotAxisStatus.CONTROL);
-    }
+    public bool XException => Motor.GetAxisStatus(XAddress, MshotAxisStatus.CONTROL);
 
-    public bool YException
-    {
-        get => Motor.GetAxisStatus(YAddress, MshotAxisStatus.CONTROL);
-    }
+    public bool YException => Motor.GetAxisStatus(YAddress, MshotAxisStatus.CONTROL);
 
-    public bool ZException
-    {
-        get => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.CONTROL);
-    }
+
+    public bool ZException => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.CONTROL);
 
     #endregion
 
@@ -113,7 +96,17 @@ public class MshotMotor
         return false;
     }
 
-    public bool SetPosition(uint axis,double value)
+    public bool SetXOffset(double value)
+        => SetOffset(XAddress, value);
+
+    public bool SetYOffset(double value)
+        => SetOffset(YAddress, value);
+
+    public bool SetZOffset(double value)
+        => SetOffset(ZAddress, value);
+
+
+    public bool SetPosition(uint axis, double value)
     {
         var position = (int)(value * Factor);
         if (Motor.PositionAbsoluteMove(axis, position) == 1) return true;
@@ -123,6 +116,15 @@ public class MshotMotor
 
         return false;
     }
+
+    public bool SetXPosition(double value)
+        => SetPosition(XAddress, value);
+
+    public bool SetYPosition(double value)
+        => SetPosition(YAddress, value);
+
+    public bool SetZPosition(double value)
+        => SetPosition(ZAddress, value);
 
     ~MshotMotor()
     {

@@ -33,17 +33,47 @@
                 <Image Source="../Image/logo.png" />
             </Viewbox>
 
-            <TextBlock Margin="10,0" Text="打开" />
             <Button
-                Margin="10,0"
+                Margin="5,0"
+                Background="{DynamicResource Region02}"
+                BorderThickness="0"
+                Click="OpenBtClick"
+                Content="打开"
+                FontFamily="{StaticResource Harmony}"
+                FontSize="14" />
+            <Button
+                Margin="5,0"
+                Background="{DynamicResource Region02}"
+                BorderThickness="0"
+                Content="图像"
+                FontFamily="{StaticResource Harmony}"
+                FontSize="14" />
+            <Button
+                Margin="5,0"
                 Background="{DynamicResource Region02}"
                 BorderThickness="0"
                 Click="ButtonBase_OnClick"
-                Command="{Binding}"
-                Content="工具" />
-            <TextBlock Margin="10,0" Text="图像" />
-            <TextBlock Margin="10,0" Text="帮助" />
-            <TextBlock Margin="10,0" Text="关于" />
+                Content="工具"
+                FontFamily="{StaticResource Harmony}"
+                FontSize="14" />
+
+            <Button
+                Margin="5,0"
+                Background="{DynamicResource Region02}"
+                BorderThickness="0"
+                Click="HelpBtClick"
+                Content="帮助"
+                FontFamily="{StaticResource Harmony}"
+                FontSize="14" />
+            <Button
+                Margin="5,0"
+                Background="{DynamicResource Region02}"
+                BorderThickness="0"
+                Click="AboutBtClick"
+                Content="关于"
+                FontFamily="{StaticResource Harmony}"
+                FontSize="14" />
+
 
             <TextBlock x:Name="FpsLabel" Margin="10,0" />
 
@@ -128,7 +158,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid Grid.Column="0" Margin="0,0,1,0">
-                                <local:LaserView VerticalAlignment="Center" />
+                                <local:LaserView x:Name="LaserControl" VerticalAlignment="Center" />
                             </Grid>
                             <Grid
                                 Grid.Column="1"

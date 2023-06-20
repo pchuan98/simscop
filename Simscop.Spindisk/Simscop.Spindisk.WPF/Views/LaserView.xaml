@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Simscop.Spindisk.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Simscop.Spindisk.Core.ViewModels;assembly=Simscop.Spindisk.Core"
     mc:Ignorable="d">
 
     <StackPanel>
@@ -30,7 +31,7 @@
                 <Grid Margin="5,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
 
@@ -39,8 +40,10 @@
                             Width="150"
                             MinWidth="0"
                             VerticalAlignment="Center"
+                            IsSnapToTickEnabled="True"
                             Maximum="100"
-                            Value="20">
+                            TickFrequency="1"
+                            Value="{Binding ChannelAValue}">
                             <Slider.Resources>
                                 <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
                                     <GradientStop Offset="0" Color="#53aea0" />
@@ -50,10 +53,11 @@
                         </Slider>
                     </Viewbox>
 
-                    <Label
+                    <TextBlock
                         Grid.Column="1"
-                        Background="#2b2b2b"
-                        Content="20%" />
+                        Width="60"
+                        Text="{Binding ChannelAValue, StringFormat='\{0\}%'}"
+                        TextAlignment="Center" />
 
                     <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
 
@@ -70,17 +74,19 @@
                 <Grid Margin="5,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
 
                     <Viewbox Grid.Column="0">
                         <Slider
                             Width="150"
+                            MinWidth="0"
                             VerticalAlignment="Center"
+                            IsSnapToTickEnabled="True"
                             Maximum="100"
-                            Minimum="0"
-                            Value="45">
+                            TickFrequency="1"
+                            Value="{Binding ChannelBValue}">
                             <Slider.Resources>
                                 <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
                                     <GradientStop Offset="0" Color="#479546" />
@@ -90,10 +96,11 @@
                         </Slider>
                     </Viewbox>
 
-                    <Label
+                    <TextBlock
                         Grid.Column="1"
-                        Background="#2b2b2b"
-                        Content="45%" />
+                        Width="60"
+                        Text="{Binding ChannelBValue, StringFormat='\{0\}%'}"
+                        TextAlignment="Center" />
 
                     <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
 
@@ -110,7 +117,7 @@
                 <Grid Margin="5,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
 
@@ -119,8 +126,10 @@
                             Width="150"
                             MinWidth="0"
                             VerticalAlignment="Center"
+                            IsSnapToTickEnabled="True"
                             Maximum="100"
-                            Value="30">
+                            TickFrequency="1"
+                            Value="{Binding ChannelCValue}">
                             <Slider.Resources>
                                 <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
                                     <GradientStop Offset="0" Color="#a4251c" />
@@ -130,10 +139,11 @@
                         </Slider>
                     </Viewbox>
 
-                    <Label
+                    <TextBlock
                         Grid.Column="1"
-                        Background="#2b2b2b"
-                        Content="30%" />
+                        Width="60"
+                        Text="{Binding ChannelCValue, StringFormat='\{0\}%'}"
+                        TextAlignment="Center" />
 
                     <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
 
@@ -150,7 +160,7 @@
                 <Grid Margin="5,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
 
@@ -159,8 +169,10 @@
                             Width="150"
                             MinWidth="0"
                             VerticalAlignment="Center"
+                            IsSnapToTickEnabled="True"
                             Maximum="100"
-                            Value="40">
+                            TickFrequency="1"
+                            Value="{Binding ChannelDValue}">
                             <Slider.Resources>
                                 <LinearGradientBrush x:Key="SliderSelectedBrush" StartPoint="0,0" EndPoint="1,1">
                                     <GradientStop Offset="0" Color="#872083" />
@@ -170,10 +182,12 @@
                         </Slider>
                     </Viewbox>
 
-                    <Label
+
+                    <TextBlock
                         Grid.Column="1"
-                        Background="#2b2b2b"
-                        Content="40%" />
+                        Width="60"
+                        Text="{Binding ChannelDValue, StringFormat='\{0\}%'}"
+                        TextAlignment="Center" />
 
                     <CheckBox Grid.Column="2" Style="{StaticResource SwitchCheckBox}" />
 

@@ -5,7 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation; 
+using System.Windows.Navigation;
+using Simscop.Spindisk.Core.ViewModels;
 using Simscop.Spindisk.WPF.Views;
 
 namespace Simscop.Spindisk.WPF
@@ -32,8 +33,9 @@ namespace Simscop.Spindisk.WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            var view = new ShellView()
+            var view = new ScanView()
             {
+                DataContext = new ScanViewModel(),
             };
 
             view.Show();

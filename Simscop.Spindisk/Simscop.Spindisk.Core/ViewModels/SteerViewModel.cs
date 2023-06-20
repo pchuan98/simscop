@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Simscop.API;
+using Simscop.Spindisk.Core.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +33,12 @@ public partial class SteerViewModel : ObservableObject
             IsConnected = _motor.InitializeMotor();
             _timer.Tick += _timer_Tick;
             _timer.Start();
+        });
+
+        WeakReferenceMessenger.Default.Register<string, string>(this, SteerMessage.MoveZ, (s, e) =>
+        {
+            var value = double.Parse(e);
+            _motor.SetZPosition(value);
         });
     }
 
@@ -79,10 +87,10 @@ public partial class SteerViewModel : ObservableObject
     public void MoveX(double step)
         => _motor.SetXOffset(step);
 
-    public void MoveY(double step)  
+    public void MoveY(double step)
         => _motor.SetYOffset(step);
 
     public void MoveZ(double step)
         => _motor.SetZOffset(step);
-    
+
 }

@@ -19,7 +19,19 @@ public static class MessageManage
     public const string SaveCurrentCapture = "SaveCurrentCaptureMessage";
 
     /// <summary>
+    /// 只保存一个，只支持TIF
+    /// </summary>
+    public const string SaveACapture = "SaveACaptureMessage";
+
+    /// <summary>
     /// 当前显示frame数据
     /// </summary>
     public const string DisplayFrame = "DisplayFrameMessage";
+}
+
+public static class SteerMessage
+{
+    public const string MoveZ = "MoveZMessage";
+
+    public const string StatusZ = "StatusZMessage";
 }

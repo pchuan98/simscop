@@ -58,11 +58,13 @@ public partial class ShellViewModel : ObservableObject
                     mat.SaveImage(path);
                 }
             });
-    }
 
-    public void SaveFrame(string path)
-    {
-
+        WeakReferenceMessenger.Default.Register<string, string>(this,MessageManage.SaveACapture, (s, e) =>
+        {
+            if (_currentFrame == null) return;
+            var mat = _currentFrame.Clone();
+            mat.SaveImage(e);
+        });
     }
 }
 

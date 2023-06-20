@@ -25,6 +25,7 @@ namespace Simscop.Spindisk.WPF.Views
         private SpinViewModel spinVM;
         private ShellViewModel shellVM;
         private SteerViewModel steerVM;
+        private LaserViewModel laserVM;
 
         private int frameCount = 0;
         private DateTime lastTime = DateTime.Now;
@@ -39,12 +40,13 @@ namespace Simscop.Spindisk.WPF.Views
             Pic3.MouseLeftButtonDown += PicDown;
             Pic4.MouseLeftButtonDown += PicDown;
 
-            
 
-            cameraVM =  new CameraViewModel();
-            shellVM =  new ShellViewModel();
+
+            cameraVM = new CameraViewModel();
+            shellVM = new ShellViewModel();
             spinVM = new SpinViewModel();
             steerVM = new SteerViewModel();
+            laserVM = new LaserViewModel();
 
             SetDataContext();
 
@@ -73,14 +75,15 @@ namespace Simscop.Spindisk.WPF.Views
             this.DataContext = shellVM;
             this.BaseCameraControl.DataContext = cameraVM;
             this.SpinControl.DataContext = spinVM;
-            this.SteerControl.DataContext= steerVM;
+            this.SteerControl.DataContext = steerVM;
+            this.LaserControl.DataContext = laserVM;
         }
 
         private bool IsFull { get; set; } = false;
 
         private void PicDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount==2)
+            if (e.ClickCount == 2)
             {
                 var grid = sender as Border;
 
@@ -120,6 +123,27 @@ namespace Simscop.Spindisk.WPF.Views
         {
             base.OnClosed(e);
             Application.Current.Shutdown();
+        }
+
+        private void AboutBtClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("请联系");
+        }
+
+        private void HelpBtClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("请联系");
+        }
+
+        private void OpenBtClick(object sender, RoutedEventArgs e)
+        {
+            var vm = new ScanViewModel();
+            var view = new ScanView
+            {
+                DataContext = vm
+            };
+
+            view.Show();
         }
     }
 }

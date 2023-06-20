@@ -17,25 +17,25 @@ namespace Simscop.Spindisk.Core.ViewModels;
 public partial class LaserViewModel:ObservableObject
 {
     [ObservableProperty] 
-    private double _channelAValue = 0;
+    private int _channelAValue = 25;
 
     [ObservableProperty] 
     private bool _channelAEnable = false;
 
     [ObservableProperty]
-    private double _channelBValue = 0;
+    private int _channelBValue = 89;
 
     [ObservableProperty]
     private bool _channelBEnable = false;
 
     [ObservableProperty]
-    private double _channelCValue = 0;
+    private int _channelCValue = 53;
 
     [ObservableProperty]
     private bool _channelCEnable = false;
 
     [ObservableProperty]
-    private double _channelDValue = 0;
+    private int _channelDValue = 9;
 
     [ObservableProperty]
     private bool _channelDEnable = false;

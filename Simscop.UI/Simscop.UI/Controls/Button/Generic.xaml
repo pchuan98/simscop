@@ -39,7 +39,9 @@
                                     x:Name="ContentPresenterMain"
                                     VerticalAlignment="Center"
                                     Background="Transparent"
+                                    FontFamily="{TemplateBinding FontFamily}"
                                     FontSize="{TemplateBinding FontSize}"
+                                    FontWeight="{TemplateBinding FontWeight}"
                                     SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                     Text="{TemplateBinding Content}" />
                             </AdornerDecorator>

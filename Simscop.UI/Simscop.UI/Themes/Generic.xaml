@@ -172,8 +172,6 @@
         <Setter Property="IsExpanded" Value="True" />
     </Style>
 
-
-
     <!--  EndRegion  -->
 
 </ResourceDictionary>

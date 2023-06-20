@@ -29,9 +29,7 @@ public partial class SaveFrameViewModel : ObservableObject
         var dialog = new FolderBrowserDialog();
 
         if (dialog.ShowDialog() == DialogResult.OK)
-        {
             SaveModel.Root = dialog.SelectedPath;
-        }
     }
 
     [RelayCommand]

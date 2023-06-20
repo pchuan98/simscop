@@ -478,7 +478,7 @@
                             <TextBox Height="40" Margin="5,0" />
                         </DockPanel>
 
-                        <DockPanel Margin="0,5">
+                        <DockPanel Margin="0,5" IsEnabled="False">
                             <Label
                                 Width="80"
                                 Height="40"
@@ -486,7 +486,7 @@
                             <TextBox Margin="10,0,0,0" Text="{Binding SaveFrameVm.SaveModel.Count}" />
                         </DockPanel>
 
-                        <DockPanel Margin="0,5">
+                        <DockPanel Margin="0,5" IsEnabled="False">
                             <Label
                                 Width="80"
                                 Height="40"

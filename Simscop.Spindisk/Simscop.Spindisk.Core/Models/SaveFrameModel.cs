@@ -62,7 +62,7 @@ public partial class SaveFrameModel : ObservableObject
                    $"{(!string.IsNullOrEmpty(Name) && IsTimeSuffix ? "_" : "")}" +
                    $"{(IsTimeSuffix ? $"{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "")}";
 
-        if (IsRaw) Paths.Add(System.IO.Path.Join(Root, $"{name}.RAW"));
+        //if (IsRaw) Paths.Add(System.IO.Path.Join(Root, $"{name}.RAW"));
         if (IsTif) Paths.Add(System.IO.Path.Join(Root, $"{name}.TIF"));
         if (IsPng) Paths.Add(System.IO.Path.Join(Root, $"{name}.PNG"));
         if (IsJpg) Paths.Add(System.IO.Path.Join(Root, $"{name}.JPG"));

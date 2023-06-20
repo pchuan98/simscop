@@ -10,13 +10,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="Messages\**" />
-		<EmbeddedResource Remove="Messages\**" />
-		<None Remove="Messages\**" />
-		<Page Remove="Messages\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
 		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
 		<PackageReference Include="OpenCvSharp4" Version="4.7.0.20230115" />

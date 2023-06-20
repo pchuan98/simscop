@@ -74,5 +74,11 @@ public class DisplayFrame
         source = dst.ToBitmapSource();
     }
 
+    public void ToMat(out Mat mat)
+    {
+        int type = MatType.MakeType(Depth, Channels);
+        mat = new Mat(Height, Width, type, FrameObject);
+    }
+
 
 }

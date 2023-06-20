@@ -51,6 +51,15 @@ namespace Simscop.Spindisk.Core.ViewModels;
 
 public partial class CameraViewModel : ObservableObject
 {
+
+    #region 引用的ViewModel
+
+    [ObservableProperty]
+    private SaveFrameViewModel _saveFrameVm = new SaveFrameViewModel();
+
+    #endregion
+
+
     private const double DefaultFrameInterval = 200;
 
     private const double PeriodSurplus = 10;
@@ -248,7 +257,7 @@ public partial class CameraViewModel : ObservableObject
                 CaptureFrame();
                 break;
             case true when IsCapture:
-                IsCapture=false;
+                IsCapture = false;
                 CaptureFrame();
                 break;
             default:
@@ -390,7 +399,7 @@ public partial class CameraViewModel : ObservableObject
             Marshal.Copy(frame.pBuffer, raw, 0, size);
 
             Buffer.BlockCopy(raw, frame.usHeader, actualRaw, 0, (int)frame.uiImgSize);
-            
+
 
             display.Height = height;
             display.Width = width;
@@ -745,103 +754,103 @@ public partial class CameraViewModel : ObservableObject
 
     #region ImageOutput
 
-    [ObservableProperty]
-    private SaveModel _saveModel = new();
+    //[ObservableProperty]
+    //private SaveFrameModel _saveFrameModel = new();
 
-    [ObservableProperty]
-    private int _savePictureCount = 1;
+    //[ObservableProperty]
+    //private int _savePictureCount = 1;
 
-    [ObservableProperty]
-    private int _savePictureInterval = 5;
+    //[ObservableProperty]
+    //private int _savePictureInterval = 5;
 
-    private int _saveCountFlag = 0;
+    //private int _saveCountFlag = 0;
 
-    /// <summary>
-    /// 当前依旧是调用的API，后期可能会对图片进行增删改
-    /// </summary>
-    [RelayCommand]
-    async Task SavePictures()
-    {
-        _saveCountFlag = 0;
+    ///// <summary>
+    ///// 当前依旧是调用的API，后期可能会对图片进行增删改
+    ///// </summary>
+    //[RelayCommand]
+    //async Task SavePictures()
+    //{
+    //    _saveCountFlag = 0;
 
-        DispatcherTimer timer = new(priority: DispatcherPriority.Background)
-        {
-            Interval = TimeSpan.FromSeconds((double)SavePictureInterval),
-        };
+    //    DispatcherTimer timer = new(priority: DispatcherPriority.Background)
+    //    {
+    //        Interval = TimeSpan.FromSeconds((double)SavePictureInterval),
+    //    };
 
-        timer.Tick += (sender, args) =>
-        {
-            if (_saveCountFlag < SavePictureCount)
-            {
-                SaveOneFrame();
-                _saveCountFlag++;
-            }
-            else
-            {
-                timer.Stop();
-            }
-        };
+    //    timer.Tick += (sender, args) =>
+    //    {
+    //        if (_saveCountFlag < SavePictureCount)
+    //        {
+    //            SaveOneFrame();
+    //            _saveCountFlag++;
+    //        }
+    //        else
+    //        {
+    //            timer.Stop();
+    //        }
+    //    };
 
-        await Task.Run(() =>
-        {
-            timer.Start();
+    //    await Task.Run(() =>
+    //    {
+    //        timer.Start();
 
-            var span = SavePictureInterval == 0 ? 1000 : SavePictureInterval * 1000;
+    //        var span = SavePictureInterval == 0 ? 1000 : SavePictureInterval * 1000;
 
-            while (timer.IsEnabled)
-            {
-                Task.Delay(span).Wait();
-            }
-        });
-    }
+    //        while (timer.IsEnabled)
+    //        {
+    //            Task.Delay(span).Wait();
+    //        }
+    //    });
+    //}
 
-    void SaveOneFrame()
-    {
-        try
-        {
-            var suffix = SaveModel.IsTimeSuffix ? $"_{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
-            var path = $"{SaveModel.Root}\\{SaveModel.Name}{suffix}";
+    //void SaveOneFrame()
+    //{
+    //    try
+    //    {
+    //        var suffix = SaveFrameModel.IsTimeSuffix ? $"_{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
+    //        var path = $"{SaveFrameModel.Root}\\{SaveFrameModel.Name}{suffix}";
 
-            if (SaveModel.IsRaw)
-                DhyanaObject.SaveCurrentFrame(path, 0);
-            if (SaveModel.IsTif)
-                DhyanaObject.SaveCurrentFrame(path, 1);
-            if (SaveModel.IsPng)
-                DhyanaObject.SaveCurrentFrame(path, 2);
-            if (SaveModel.IsJpg)
-                DhyanaObject.SaveCurrentFrame(path, 3);
-            if (SaveModel.IsBmp)
-                DhyanaObject.SaveCurrentFrame(path, 4);
-        }
-        catch (Exception e)
-        {
-            //MessageBox.Show(e.ToString());
-            throw new Exception("", e);
+    //        if (SaveFrameModel.IsRaw)
+    //            DhyanaObject.SaveCurrentFrame(path, 0);
+    //        if (SaveFrameModel.IsTif)
+    //            DhyanaObject.SaveCurrentFrame(path, 1);
+    //        if (SaveFrameModel.IsPng)
+    //            DhyanaObject.SaveCurrentFrame(path, 2);
+    //        if (SaveFrameModel.IsJpg)
+    //            DhyanaObject.SaveCurrentFrame(path, 3);
+    //        if (SaveFrameModel.IsBmp)
+    //            DhyanaObject.SaveCurrentFrame(path, 4);
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        //MessageBox.Show(e.ToString());
+    //        throw new Exception("", e);
 
-        }
-    }
+    //    }
+    //}
 
-    [ObservableProperty]
-    private float _videoFps = 25;
+    //[ObservableProperty]
+    //private float _videoFps = 25;
 
-    [RelayCommand]
-    private void SaveVideo()
-    {
-        try
-        {
-            var suffix = SaveModel.IsTimeSuffix ? $"_{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
-            string path = $"{SaveModel.Root}\\{SaveModel.Name}{suffix}.avi";
+    //[RelayCommand]
+    //private void SaveVideo()
+    //{
+    //    try
+    //    {
+    //        var suffix = SaveFrameModel.IsTimeSuffix ? $"_{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "";
+    //        string path = $"{SaveFrameModel.Root}\\{SaveFrameModel.Name}{suffix}.avi";
 
-            var interval = Exposure + 100;
-            DhyanaObject.SaveVideo((int)interval, VideoFps, path);
-        }
-        catch (Exception e)
-        {
-            //MessageBox.Show(e.ToString());
-            throw new Exception("", e);
+    //        var interval = Exposure + 100;
+    //        DhyanaObject.SaveVideo((int)interval, VideoFps, path);
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        //MessageBox.Show(e.ToString());
+    //        throw new Exception("", e);
 
-        }
-    }
+    //    }
+    //}
 
     #endregion
 }

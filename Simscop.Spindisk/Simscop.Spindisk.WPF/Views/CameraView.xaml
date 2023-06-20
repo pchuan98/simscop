@@ -9,8 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Simscop.Spindisk.Core.ViewModels;assembly=Simscop.Spindisk.Core"
     Title="设置"
-    Width="520"
     Height="700"
+    MaxWidth="520"
     ResizeMode="CanResize"
     Style="{StaticResource TipWindow}"
     Topmost="False">
@@ -38,7 +38,7 @@
                 Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden">
             <StackPanel Orientation="Vertical">
 
                 <!--  Region 暂时不用  -->
@@ -419,7 +419,10 @@
                     </Grid>
                 </Expander>
 
-                <Expander Margin="8" Header="文件保存">
+                <Expander
+                    Width="500"
+                    Margin="8"
+                    Header="文件保存">
                     <StackPanel Margin="10">
                         <UniformGrid Margin="0,0,0,5" Columns="6">
                             <UniformGrid.Resources>
@@ -431,11 +434,11 @@
                                 Width="80"
                                 Height="40"
                                 Content="格式选择" />
-                            <CheckBox Content="RAW" IsChecked="{Binding SaveModel.IsRaw}" />
-                            <CheckBox Content="TIF" IsChecked="{Binding SaveModel.IsTif}" />
-                            <CheckBox Content="PNG" IsChecked="{Binding SaveModel.IsPng}" />
-                            <CheckBox Content="JPG" IsChecked="{Binding SaveModel.IsJpg}" />
-                            <CheckBox Content="BMP" IsChecked="{Binding SaveModel.IsBmp}" />
+                            <CheckBox Content="RAW" IsChecked="{Binding SaveFrameVm.SaveModel.IsRaw}" />
+                            <CheckBox Content="TIF" IsChecked="{Binding SaveFrameVm.SaveModel.IsTif}" />
+                            <CheckBox Content="PNG" IsChecked="{Binding SaveFrameVm.SaveModel.IsPng}" />
+                            <CheckBox Content="JPG" IsChecked="{Binding SaveFrameVm.SaveModel.IsJpg}" />
+                            <CheckBox Content="BMP" IsChecked="{Binding SaveFrameVm.SaveModel.IsBmp}" />
                         </UniformGrid>
 
 
@@ -449,12 +452,13 @@
                             <Button
                                 Width="100"
                                 Margin="5,0,0,0"
+                                Command="{Binding SaveFrameVm.LoadSaveDirectoryCommand}"
                                 Content="打开"
                                 DockPanel.Dock="Right" />
                             <TextBox
                                 Height="40"
                                 Margin="5,0"
-                                Text="{Binding SaveModel.Root}" />
+                                Text="{Binding SaveFrameVm.SaveModel.Root}" />
                         </DockPanel>
 
                         <DockPanel Margin="0,5">
@@ -469,12 +473,9 @@
                                 Margin="5,0,0,0"
                                 Content="时间后缀"
                                 DockPanel.Dock="Right"
-                                IsChecked="{Binding SaveModel.IsTimeSuffix}"
+                                IsChecked="{Binding SaveFrameVm.SaveModel.IsTimeSuffix}"
                                 Style="{StaticResource CheckBoxAsButton}" />
-                            <TextBox
-                                Height="40"
-                                Margin="5,0"
-                                Text="{Binding SaveModel.Name}" />
+                            <TextBox Height="40" Margin="5,0" />
                         </DockPanel>
 
                         <DockPanel Margin="0,5">
@@ -482,7 +483,7 @@
                                 Width="80"
                                 Height="40"
                                 Content="存储数量" />
-                            <TextBox Margin="10,0,0,0" Text="{Binding SavePictureCount}" />
+                            <TextBox Margin="10,0,0,0" Text="{Binding SaveFrameVm.SaveModel.Count}" />
                         </DockPanel>
 
                         <DockPanel Margin="0,5">
@@ -490,13 +491,14 @@
                                 Width="80"
                                 Height="40"
                                 Content="时间间隔" />
-                            <TextBox Margin="10,0,0,0" Text="{Binding SavePictureInterval}" />
+                            <TextBox Margin="10,0,0,0" Text="{Binding SaveFrameVm.SaveModel.Interval}" />
                         </DockPanel>
 
                         <Button
                             Height="40"
                             Margin="0,10"
                             HorizontalAlignment="Stretch"
+                            Command="{Binding SaveFrameVm.SaveFileCommand}"
                             Content="保存图片" />
 
                         <DockPanel Margin="0,5" IsEnabled="False">
@@ -508,7 +510,6 @@
                             <Button
                                 Width="100"
                                 Margin="5,0,0,0"
-                                Command="{Binding SaveVideoCommand}"
                                 Content="开始录制"
                                 DockPanel.Dock="Right" />
                             <UniformGrid Margin="5,0" Columns="3">

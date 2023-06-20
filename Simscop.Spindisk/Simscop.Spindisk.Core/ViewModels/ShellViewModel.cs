@@ -8,8 +8,12 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
+using Simscop.Spindisk.Core.Messages;
 using Simscop.Spindisk.Core.Models;
 
 
@@ -22,76 +26,43 @@ public partial class ShellViewModel : ObservableObject
 
     //private WriteableBitmap _wbBitmap;
 
+    private Mat? _currentFrame = null;
+
+    private DispatcherTimer _timer = new DispatcherTimer(DispatcherPriority.Render);
+
     public ShellViewModel()
     {
         WeakReferenceMessenger.Default.Register<DisplayFrame, string>(this, "Display", (s, m) =>
         {
-            System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+            Application.Current?.Dispatcher.Invoke(() =>
             {
-                m.Test(out var bitmap);
-                ImageFirst = bitmap;
+                m.ToMat(out var bitmap);
+                var dst = new Mat();
+                Cv2.ApplyColorMap(bitmap, dst, Lib.ImageExtension.ColorMaps.Green);
+
+                _currentFrame = dst;
+                var source = dst.ToBitmapSource();
+                ImageFirst = source;
             });
         });
+
+        WeakReferenceMessenger.Default.Register<SaveFrameModel, string>(this, MessageManage.SaveCurrentCapture,
+            (s, e) =>
+            {
+                if (_currentFrame == null) return;
+                e.Dump();
+
+                var mat = _currentFrame.Clone();
+                foreach (var path in e.Paths)
+                {
+                    mat.SaveImage(path);
+                }
+            });
+    }
+
+    public void SaveFrame(string path)
+    {
+
     }
 }
 
-//// TODO 测试使用位图渲染的方式
-//public partial class ShellViewModel : ObservableObject
-//{
-//    [ObservableProperty]
-//    private ImageSource? _imageFirst;
-
-//    WriteableBitmap? _writeable = null;
-
-//    private int _width = 0;
-//    private int _height = 0;
-
-//    private int _length = 0;
-
-//    private int _stride = 0;
-//    private int _offset = 0;
-
-//    public ShellViewModel()
-//    {
-//        WeakReferenceMessenger.Default.Register<DisplayFrame, string>(this, "Display", (s, m) =>
-//        {
-//            Application.Current?.Dispatcher.Invoke(() =>
-//            {
-
-//                if (_writeable == null || Math.Abs(_height - m.Height) > 0.01 || Math.Abs(_width - m.Width) > 0.01)
-//                {
-//                    _width = m.Width;
-//                    _height = m.Height;
-
-//                    _length = _width * _height * 3;
-
-//                    _stride = _width * _height * 3;
-//                    _offset = _width * 3;
-
-//                    _writeable = new WriteableBitmap(_width, _height, 96, 96, PixelFormats.Bgr32, null);
-//                    ImageFirst = _writeable;
-//                }
-
-//                try
-//                {
-//                    _writeable.Lock();
-
-//                    Marshal.Copy(m.FrameObject, 0, _writeable.BackBuffer, _length);
-//                    _writeable.AddDirtyRect(new Int32Rect(0, 0, _width, _height));
-
-//                }
-//                catch (Exception e)
-//                {
-//                    Debug.WriteLine(e.ToString());
-//                }
-//                finally
-//                {
-//                    _writeable.Unlock();
-
-//                }
-
-
-//            });
-//        });
-//    }
-//}

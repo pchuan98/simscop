@@ -121,7 +121,7 @@ public partial class SpinViewModel : ObservableObject
 
     public List<string> SpiningCollection => new List<string>()
     {
-        "0","1"
+        "宽场","转盘"
     };
 
     [ObservableProperty]
@@ -139,7 +139,7 @@ public partial class SpinViewModel : ObservableObject
 
     public List<string> DichroicCollection => new List<string>()
     {
-        "1","2","3","4","5"
+        "DM488","DM532","DM561","DM640","DM405"
     };
 
     [ObservableProperty]
@@ -153,7 +153,7 @@ public partial class SpinViewModel : ObservableObject
 
     public List<string> EmissionCollection => new List<string>()
     {
-        "1","2","3","4","5","6","7","8"
+        "DAPI","BFP","FITC","TRITC","CY5","Custom1","Custom2","Custom3"
     };
 
     [ObservableProperty]
@@ -167,7 +167,7 @@ public partial class SpinViewModel : ObservableObject
 
     public List<string> ExcitationCollection => new List<string>()
     {
-        "1","2","3","4","5","6","7","8"
+        "405nm","445nm","488nm","532nm","561nm","640nm","Custom1","Custom2"
     };
 
     [ObservableProperty]

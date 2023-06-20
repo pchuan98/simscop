@@ -135,12 +135,13 @@ namespace Simscop.Spindisk.WPF.Views
             MessageBox.Show("请联系");
         }
 
+        private ScanViewModel scanVM = new();
+
         private void OpenBtClick(object sender, RoutedEventArgs e)
         {
-            var vm = new ScanViewModel();
-            var view = new ScanView
+             var view = new ScanView
             {
-                DataContext = vm
+                DataContext = scanVM
             };
 
             view.Show();

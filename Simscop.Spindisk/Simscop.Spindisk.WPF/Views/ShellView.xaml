@@ -240,31 +240,19 @@
                     Name="Pic2"
                     Margin="2.5,5,2.5,2.5"
                     Background="{DynamicResource Region01}"
-                    CornerRadius="10">
-                    <Grid>
-                        <Image Width="400" Source="/Image/blue.jpg" />
-                    </Grid>
-                </Border>
+                    CornerRadius="10" />
 
                 <Border
                     Name="Pic3"
                     Margin="0,2.5,2.5,5"
                     Background="{DynamicResource Region01}"
-                    CornerRadius="10">
-                    <Grid>
-                        <Image Width="400" Source="/Image/red.jpg" />
-                    </Grid>
-                </Border>
+                    CornerRadius="10" />
 
                 <Border
                     Name="Pic4"
                     Margin="2.5,2.5,2.5,5"
                     Background="{DynamicResource Region01}"
-                    CornerRadius="10">
-                    <Grid>
-                        <Image Width="400" Source="/Image/remix.jpg" />
-                    </Grid>
-                </Border>
+                    CornerRadius="10" />
             </UniformGrid>
         </Grid>
     </Grid>

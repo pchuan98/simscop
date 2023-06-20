@@ -33,9 +33,9 @@ namespace Simscop.Spindisk.WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            var view = new ScanView()
+            var view = new ShellView()
             {
-                DataContext = new ScanViewModel(),
+                DataContext = new ShellViewModel(),
             };
 
             view.Show();

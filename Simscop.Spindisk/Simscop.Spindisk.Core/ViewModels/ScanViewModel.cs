@@ -43,29 +43,33 @@ public partial class ScanViewModel : ObservableObject
     [RelayCommand]
     public void StartScanZ()
     {
-        ZEnable = false;
-
-        if (ZEnd <= ZStart | ZStep <= 0)
+        Task.Run(() =>
         {
-            ZEnable = true;
-            return;
-        }
+            ZEnable = false;
 
-        var pos = ZStart;
-        WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
-        Thread.Sleep(5000);
-        do
-        {
+            if (ZEnd <= ZStart | ZStep <= 0)
+            {
+                ZEnable = true;
+                return;
+            }
+
+            var pos = ZStart;
             WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
+            Thread.Sleep(5000);
+            do
+            {
+                WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
 
-            Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
-            var path = System.IO.Path.Join(Root, $"Z_{pos}.TIF");
-            WeakReferenceMessenger.Default.Send<string, string>(path, MessageManage.SaveACapture);
+                var path = System.IO.Path.Join(Root, $"Z_{pos}.TIF");
+                WeakReferenceMessenger.Default.Send<string, string>(path, MessageManage.SaveACapture);
 
-            pos += ZStep;
-        } while (pos <= ZEnd);
+                pos += ZStep;
+            } while (pos <= ZEnd);
 
-        ZEnable = true;
+            ZEnable = true;
+
+        });
     }
 }

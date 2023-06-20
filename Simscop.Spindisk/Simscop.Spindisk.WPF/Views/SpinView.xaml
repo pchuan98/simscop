@@ -61,7 +61,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Command="{Binding SetDiskCommand}"
-                Content="开启"
+                Content="开启转盘"
                 FontSize="13"
                 IsChecked="{Binding DiskEnable}"
                 IsEnabled="{Binding SpinControlEnabled}"

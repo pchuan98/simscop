@@ -45,22 +45,26 @@ public partial class ScanViewModel : ObservableObject
     {
         ZEnable = false;
 
-        if (ZEnd <= ZStart) return;
+        if (ZEnd <= ZStart | ZStep <= 0)
+        {
+            ZEnable = true;
+            return;
+        }
 
         var pos = ZStart;
-        WeakReferenceMessenger.Default.Send<string, string>(SteerMessage.MoveZ, pos.ToString(CultureInfo.InvariantCulture));
-        Thread.Sleep(2000);
+        WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
+        Thread.Sleep(5000);
         do
         {
-            WeakReferenceMessenger.Default.Send<string, string>(SteerMessage.MoveZ, pos.ToString(CultureInfo.InvariantCulture));
+            WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
 
-            Thread.Sleep(100);
-            
+            Thread.Sleep(1000);
+
             var path = System.IO.Path.Join(Root, $"Z_{pos}.TIF");
-            WeakReferenceMessenger.Default.Send<string, string>(MessageManage.SaveACapture, path);
+            WeakReferenceMessenger.Default.Send<string, string>(path, MessageManage.SaveACapture);
 
             pos += ZStep;
-        } while (pos + ZStep < ZEnd);
+        } while (pos <= ZEnd);
 
         ZEnable = true;
     }

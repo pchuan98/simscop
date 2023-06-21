@@ -69,7 +69,12 @@ public partial class ScanViewModel : ObservableObject
     [ObservableProperty]
     private double _percent = 0;
 
+    partial void OnPercentChanged(double value)
+    {
+        if (Percent == 0) Title= "自动扫描";
 
+        Title = $"自动扫描 {Percent:.2f} %";
+    }
 
     [ObservableProperty] 
     private string _title = "自动扫描";

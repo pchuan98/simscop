@@ -8,8 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding Title}"
     Width="400"
-    Height="450"
+    Height="510"
+    ResizeMode="NoResize"
     Style="{StaticResource BlankWindow}"
+    Topmost="True"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -56,6 +58,146 @@
             <Border
                 Height="1"
                 Margin="2,10,2,0"
+                Background="{DynamicResource RegionReverse03}" />
+
+
+            <StackPanel IsEnabled="{Binding XEnable}">
+                <UniformGrid Margin="0,10" Columns="2">
+                    <DockPanel>
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Text="X起始位置" />
+
+                        <TextBox
+                            Height="32"
+                            Margin="5,0"
+                            Padding="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Text="{Binding XStart}"
+                            TextAlignment="Left" />
+                    </DockPanel>
+
+                    <DockPanel>
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Text="X终止位置" />
+                        <TextBox
+                            Height="32"
+                            Margin="5,0"
+                            Padding="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Text="{Binding XEnd}"
+                            TextAlignment="Left" />
+                    </DockPanel>
+                </UniformGrid>
+
+                <UniformGrid Margin="0,10" Columns="2">
+                    <DockPanel>
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Text="X步长       " />
+
+                        <TextBox
+                            Height="32"
+                            Margin="5,0"
+                            Padding="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Text="{Binding XStep}"
+                            TextAlignment="Left" />
+                    </DockPanel>
+
+                    <Button
+                        Width="Auto"
+                        Height="32"
+                        Margin="5,0"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding StartScanXCommand}"
+                        Content="开始扫描" />
+                </UniformGrid>
+            </StackPanel>
+
+            <Border
+                Height="1"
+                Margin="2,5,2,0"
+                Background="{DynamicResource RegionReverse03}" />
+
+
+            <StackPanel IsEnabled="{Binding YEnable}">
+                <UniformGrid Margin="0,10" Columns="2">
+                    <DockPanel>
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Text="Y起始位置" />
+
+                        <TextBox
+                            Height="32"
+                            Margin="5,0"
+                            Padding="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Text="{Binding YStart}"
+                            TextAlignment="Left" />
+                    </DockPanel>
+
+                    <DockPanel>
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Text="Y终止位置" />
+                        <TextBox
+                            Height="32"
+                            Margin="5,0"
+                            Padding="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Text="{Binding YEnd}"
+                            TextAlignment="Left" />
+                    </DockPanel>
+                </UniformGrid>
+
+                <UniformGrid Margin="0,10" Columns="2">
+                    <DockPanel>
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Text="Y步长       " />
+
+                        <TextBox
+                            Height="32"
+                            Margin="5,0"
+                            Padding="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Text="{Binding YStep}"
+                            TextAlignment="Left" />
+                    </DockPanel>
+
+                    <Button
+                        Width="Auto"
+                        Height="32"
+                        Margin="5,0"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding StartScanYCommand}"
+                        Content="开始扫描" />
+                </UniformGrid>
+            </StackPanel>
+
+            <Border
+                Height="1"
+                Margin="2,5,2,0"
                 Background="{DynamicResource RegionReverse03}" />
 
 
@@ -123,6 +265,47 @@
                 </UniformGrid>
             </StackPanel>
 
+            <Border
+                Height="1"
+                Margin="2,5,2,0"
+                Background="{DynamicResource RegionReverse03}" />
+
+            <UniformGrid Columns="4">
+                <TextBox
+                    Height="32"
+                    Margin="5"
+                    Padding="10,0,0,0"
+                    VerticalContentAlignment="Center"
+                    Text="{Binding TestStart}"
+                    TextAlignment="Left" />
+
+                <TextBox
+                    Height="32"
+                    Margin="5"
+                    Padding="10,0,0,0"
+                    VerticalContentAlignment="Center"
+                    Text="{Binding TestEnd}" />
+
+                <TextBox
+                    Height="32"
+                    Margin="5"
+                    Padding="10,0,0,0"
+                    VerticalContentAlignment="Center"
+                    Text="{Binding TestStep}" />
+
+                <TextBox
+                    Height="32"
+                    Margin="5"
+                    Padding="10,0,0,0"
+                    VerticalContentAlignment="Center"
+                    Text="{Binding TestInterval}" />
+            </UniformGrid>
+
+            <Button
+                Margin="5"
+                HorizontalAlignment="Stretch"
+                Command="{Binding TestCommand}"
+                Content="开始测试" />
         </StackPanel>
     </Grid>
 </Window>

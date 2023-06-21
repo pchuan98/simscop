@@ -35,6 +35,18 @@ public partial class SteerViewModel : ObservableObject
             _timer.Start();
         });
 
+        WeakReferenceMessenger.Default.Register<string, string>(this, SteerMessage.MoveX, (s, e) =>
+        {
+            var value = double.Parse(e);
+            _motor.SetXPosition(value);
+        });
+
+        WeakReferenceMessenger.Default.Register<string, string>(this, SteerMessage.MoveY, (s, e) =>
+        {
+            var value = double.Parse(e);
+            _motor.SetYPosition(value);
+        });
+
         WeakReferenceMessenger.Default.Register<string, string>(this, SteerMessage.MoveZ, (s, e) =>
         {
             var value = double.Parse(e);

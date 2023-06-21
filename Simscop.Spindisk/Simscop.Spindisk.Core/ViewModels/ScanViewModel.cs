@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static OpenCvSharp.Stitcher;
 
 namespace Simscop.Spindisk.Core.ViewModels;
 
@@ -29,6 +31,30 @@ public partial class ScanViewModel : ObservableObject
     }
 
     [ObservableProperty]
+    private double _xStart = 0;
+
+    [ObservableProperty]
+    private double _xEnd = 0;
+
+    [ObservableProperty]
+    private double _xStep = 0;
+
+    [ObservableProperty]
+    private bool _xEnable = true;
+
+    [ObservableProperty]
+    private double _yStart = 0;
+
+    [ObservableProperty]
+    private double _yEnd = 0;
+
+    [ObservableProperty]
+    private double _yStep = 0;
+
+    [ObservableProperty]
+    private bool _yEnable = true;
+
+    [ObservableProperty]
     private double _zStart = 0;
 
     [ObservableProperty]
@@ -40,36 +66,102 @@ public partial class ScanViewModel : ObservableObject
     [ObservableProperty]
     private bool _zEnable = true;
 
-    [RelayCommand]
-    public void StartScanZ()
+    [ObservableProperty]
+    private double _percent = 0;
+
+    void StartScan(uint mode)
     {
+        var flag = new string[]
+        {
+            "X","Y","Z"
+        };
+
+        void EnableAction(bool value) => GetType().GetProperty($"{flag[mode]}Enable")!.SetValue(this, value);
+
+        var startValue = (double)GetType().GetProperty($"{flag[mode]}Start")!.GetValue(this)!;
+        var endValue = (double)GetType().GetProperty($"{flag[mode]}End")!.GetValue(this)!;
+        var stepValue = (double)GetType().GetProperty($"{flag[mode]}Step")!.GetValue(this)!;
+
+        var message = SteerMessage.GetValue($"Move{flag[mode]}")!;
+
         Task.Run(() =>
         {
-            ZEnable = false;
+            EnableAction(false);
+            Percent = 0;
 
-            if (ZEnd <= ZStart | ZStep <= 0)
+            if (endValue <= startValue | stepValue <= 0)
             {
-                ZEnable = true;
+                EnableAction(true);
                 return;
             }
 
-            var pos = ZStart;
-            WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
+            var pos = startValue;
+
+            var count = (int)Math.Ceiling((endValue - startValue) / stepValue);
+            var step = 0;
+
+            WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), message);
             Thread.Sleep(5000);
             do
             {
-                WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
+                WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), message);
 
-                Thread.Sleep(1000);
+                Thread.Sleep(1500);
 
-                var path = System.IO.Path.Join(Root, $"Z_{pos}.TIF");
+                var path = System.IO.Path.Join(Root, $"{flag[mode]}_{pos}.TIF");
                 WeakReferenceMessenger.Default.Send<string, string>(path, MessageManage.SaveACapture);
 
-                pos += ZStep;
-            } while (pos <= ZEnd);
+                pos += stepValue;
+                pos = Math.Min(endValue, pos);
 
-            ZEnable = true;
+                Percent = (double)++step / count * 100;
+            } while (step == count);
 
+
+            EnableAction(true);
+
+        });
+    }
+
+    [RelayCommand]
+    public void StartScanX()
+        => StartScan(0);
+
+    [RelayCommand]
+    public void StartScanY()
+        => StartScan(1);
+
+    [RelayCommand]
+    public void StartScanZ()
+        => StartScan(2);
+
+    [ObservableProperty] 
+    public int _testInterval = 1000;
+
+    [ObservableProperty] public double _testStart = 0;
+
+    [ObservableProperty] public double _testEnd = 0;
+
+    [ObservableProperty] public double _testStep = 0;
+
+    [RelayCommand]
+    public void Test()
+    {
+        Task.Run(() =>
+        {
+            var pos = TestStart;
+
+            WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
+            Thread.Sleep(2000);
+            do
+            {
+                WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
+                Thread.Sleep(TestInterval);
+
+                pos += TestStep;
+                pos = Math.Min(TestEnd, pos);
+
+            } while (pos <= TestEnd);
         });
     }
 }

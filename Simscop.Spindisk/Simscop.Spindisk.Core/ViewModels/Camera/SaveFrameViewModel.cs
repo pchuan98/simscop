@@ -25,7 +25,6 @@ public partial class SaveFrameViewModel : ObservableObject
     [RelayCommand]
     void LoadSaveDirectory()
     {
-        // 打开文件夹窗口
         var dialog = new FolderBrowserDialog();
 
         if (dialog.ShowDialog() == DialogResult.OK)
@@ -37,6 +36,19 @@ public partial class SaveFrameViewModel : ObservableObject
     {
         var model = new SaveFrameModel();
         model.CopyFrom(SaveModel);
+
+        WeakReferenceMessenger.Default.Send<SaveFrameModel, string>(model, MessageManage.SaveCurrentCapture);
+    }
+
+    [RelayCommand]
+    void QuickSaveFile()
+    {
+        var dialog = new SaveFileDialog();
+
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+
+        }
 
         WeakReferenceMessenger.Default.Send<SaveFrameModel, string>(model, MessageManage.SaveCurrentCapture);
     }

@@ -49,7 +49,5 @@ public partial class SaveFrameViewModel : ObservableObject
         {
 
         }
-
-        WeakReferenceMessenger.Default.Send<SaveFrameModel, string>(model, MessageManage.SaveCurrentCapture);
     }
 }

@@ -434,7 +434,10 @@
                                 Width="80"
                                 Height="40"
                                 Content="格式选择" />
-                            <CheckBox Content="RAW" IsChecked="{Binding SaveFrameVm.SaveModel.IsRaw}" />
+                            <CheckBox
+                                Content="RAW"
+                                IsChecked="{Binding SaveFrameVm.SaveModel.IsRaw}"
+                                IsEnabled="False" />
                             <CheckBox Content="TIF" IsChecked="{Binding SaveFrameVm.SaveModel.IsTif}" />
                             <CheckBox Content="PNG" IsChecked="{Binding SaveFrameVm.SaveModel.IsPng}" />
                             <CheckBox Content="JPG" IsChecked="{Binding SaveFrameVm.SaveModel.IsJpg}" />
@@ -475,7 +478,10 @@
                                 DockPanel.Dock="Right"
                                 IsChecked="{Binding SaveFrameVm.SaveModel.IsTimeSuffix}"
                                 Style="{StaticResource CheckBoxAsButton}" />
-                            <TextBox Height="40" Margin="5,0" />
+                            <TextBox
+                                Height="40"
+                                Margin="5,0"
+                                Text="{Binding SaveFrameVm.SaveModel.Name}" />
                         </DockPanel>
 
                         <DockPanel Margin="0,5" IsEnabled="False">

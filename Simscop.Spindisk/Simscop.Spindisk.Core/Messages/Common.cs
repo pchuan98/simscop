@@ -31,7 +31,25 @@ public static class MessageManage
 
 public static class SteerMessage
 {
+    public const string MoveX = "MoveXMessage";
+
+    public const string StatusX = "StatusXMessage";
+
+    public const string MoveY = "MoveYMessage";
+
+    public const string StatusY = "StatusYMessage";
+
     public const string MoveZ = "MoveZMessage";
 
     public const string StatusZ = "StatusZMessage";
+
+    public static string? GetValue(string name)
+    {
+        var type = typeof(SteerMessage);
+
+        var fields = type.GetFields();
+
+        return (from field in fields let value = field.GetRawConstantValue() 
+            where field.Name == name select (string?)Convert.ToString(value)).FirstOrDefault();
+    }
 }

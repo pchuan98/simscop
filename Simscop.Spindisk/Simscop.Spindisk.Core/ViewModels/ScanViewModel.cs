@@ -125,7 +125,7 @@ public partial class ScanViewModel : ObservableObject
                 pos = Math.Min(endValue, pos);
 
                 Percent = (double)++step / count * 100;
-            } while (step == count);
+            } while (step <= count);
 
 
             EnableAction(true);

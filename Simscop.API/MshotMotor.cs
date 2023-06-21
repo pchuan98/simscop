@@ -48,20 +48,11 @@ public class MshotMotor
 
     #region Enable
 
-    public bool XEnabled
-    {
-        get => Motor.GetAxisStatus(XAddress, MshotAxisStatus.ENABLE);
-    }
+    public bool XEnabled => Motor.GetAxisStatus(XAddress, MshotAxisStatus.ENABLE);
 
-    public bool YEnabled
-    {
-        get => Motor.GetAxisStatus(YAddress, MshotAxisStatus.ENABLE);
-    }
+    public bool YEnabled => Motor.GetAxisStatus(YAddress, MshotAxisStatus.ENABLE);
 
-    public bool ZEnabled
-    {
-        get => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.ENABLE);
-    }
+    public bool ZEnabled => Motor.GetAxisStatus(ZAddress, MshotAxisStatus.ENABLE);
 
     #endregion
 

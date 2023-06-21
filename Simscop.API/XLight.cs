@@ -124,6 +124,37 @@ public static class XLight
     }
 
     /// <summary>
+    /// 自动轮询所有可能可以的com，发现符合条件的直接连接
+    /// </summary>
+    /// <returns></returns>
+    public static bool AutoConnect()
+    {
+        try
+        {
+            var comList = SerialPort.GetPortNames();
+            foreach (var name in comList)
+            {
+                var port = new SerialPort()
+                {
+                    PortName = name,
+                    BaudRate = 9600,
+                    DataBits = 8,
+                    StopBits = StopBits.One,
+                    Parity = Parity.None
+                };
+
+
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Open COM error.", e);
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// 解开COM端口
     /// </summary>
     public static void Disconnect()
@@ -173,7 +204,7 @@ public static class XLight
     {
         try
         {
-            FlagC= value is >= 1 and <= 5 ? value : 1;
+            FlagC = value is >= 1 and <= 5 ? value : 1;
             _serial?.Write($"C{FlagC}\r");
         }
         catch (Exception e)

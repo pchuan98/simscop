@@ -41,7 +41,7 @@ public static class Motor
     public static extern int OpenQk(int isOpen);
 
     public static bool OpenQk(bool isOpen)
-        => LoadErrorMessage(() => OpenQk(isOpen ? 1 : 0));
+        => LoadErrorMessage(() => OpenQk(isOpen ? 2 : 0));
 
     /// <summary>
     /// 打开串口

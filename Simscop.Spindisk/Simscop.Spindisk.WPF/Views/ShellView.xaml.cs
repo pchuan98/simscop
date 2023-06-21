@@ -26,11 +26,14 @@ namespace Simscop.Spindisk.WPF.Views
         private ShellViewModel shellVM;
         private SteerViewModel steerVM;
         private LaserViewModel laserVM;
+        private ScanViewModel scanVM;
+
 
         private int frameCount = 0;
         private DateTime lastTime = DateTime.Now;
 
         private CameraView cameraView;
+        private ScanView scanView;
 
         public ShellView()
         {
@@ -49,10 +52,15 @@ namespace Simscop.Spindisk.WPF.Views
             spinVM = new SpinViewModel();
             steerVM = new SteerViewModel();
             laserVM = new LaserViewModel();
+            scanVM = new ScanViewModel();
 
             cameraView = new()
             {
                 DataContext=cameraVM,
+            };
+            scanView = new()
+            {
+                DataContext = scanVM,
             };
 
             SetDataContext();
@@ -120,7 +128,11 @@ namespace Simscop.Spindisk.WPF.Views
 
         // TODO 这里的卡顿问题已经定位了，原因就是在给datacontext的时候数据变化和赋值原因，解决办法挺简单的，单个窗口重复利用就行，但是这里目前就卡着吧，有空再改
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-            => cameraView.Show();
+        {
+            cameraView.Show();
+            cameraView.Topmost = true;
+            cameraView.Topmost = false;
+        }
         
 
         protected override void OnClosed(EventArgs e)
@@ -131,24 +143,22 @@ namespace Simscop.Spindisk.WPF.Views
 
         private void AboutBtClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("请联系");
+            System.Diagnostics.Process.Start("explore.exe",
+                @"https://www.simscop.com/WebShop/About.aspx");
         }
 
         private void HelpBtClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("请联系");
+            System.Diagnostics.Process.Start("explore.exe",
+                @"https://www.simscop.com/WebShop/Contact.aspx");
         }
 
-        private ScanViewModel scanVM = new();
 
         private void OpenBtClick(object sender, RoutedEventArgs e)
         {
-             var view = new ScanView
-            {
-                DataContext = scanVM
-            };
-
-            view.Show();
+            scanView.Show();
+            scanView.Topmost = true;
+            scanView.Topmost = false;
         }
     }
 }

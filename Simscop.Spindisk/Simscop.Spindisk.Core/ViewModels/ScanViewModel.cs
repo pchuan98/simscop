@@ -69,6 +69,11 @@ public partial class ScanViewModel : ObservableObject
     [ObservableProperty]
     private double _percent = 0;
 
+
+
+    [ObservableProperty] 
+    private string _title = "自动扫描";
+
     void StartScan(uint mode)
     {
         var flag = new string[]

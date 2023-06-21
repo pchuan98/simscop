@@ -132,7 +132,7 @@ public static class Dhyana
     /// </summary>
     public static readonly List<string> Resolutions = new List<string>()
     {
-        "2048x2040(Normal)", "2048x2040(Enhance)", "1024x1020(2x2Bin)", "512x510(4x4Bin)"
+        "2048x2048(Normal)", "2048x2048(Enhance)", "1024x1024(2x2Bin)", "512x512(4x4Bin)"
     };
 
     /// <summary>

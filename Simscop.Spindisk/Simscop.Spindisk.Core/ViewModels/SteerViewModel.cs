@@ -84,10 +84,10 @@ public partial class SteerViewModel : ObservableObject
     private bool _zEnable = true;
 
     [ObservableProperty]
-    private double _xyStep = 0;
+    private double _xyStep = 100;
 
     [ObservableProperty]
-    private double _zStep = 0;
+    private double _zStep = 10;
 
     [ObservableProperty]
     private bool _isConnected = false;

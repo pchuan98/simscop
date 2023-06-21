@@ -52,8 +52,9 @@
                 Padding="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
+                Command="{Binding SaveFrameVm.QuickSaveFileCommand}"
                 Content="存储图片"
-                IsEnabled="False" />
+                IsEnabled="{Binding IsCapture}" />
 
             <CheckBox
                 Width="auto"

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
 
 // ReSharper disable once CheckNamespace
 namespace Simscop.Spindisk.Core.ViewModels;
@@ -43,11 +44,24 @@ public partial class SaveFrameViewModel : ObservableObject
     [RelayCommand]
     void QuickSaveFile()
     {
-        var dialog = new SaveFileDialog();
+        var name = $"{SaveModel.Name}" +
+                   $"{(!string.IsNullOrEmpty(SaveModel.Name) && SaveModel.IsTimeSuffix ? "_" : "")}" +
+                   $"{(SaveModel.IsTimeSuffix ? $"{DateTime.Now:yyyyMMdd_HH_mm_ss}" : "")}";
 
-        if (dialog.ShowDialog() == DialogResult.OK)
+        var dlg = new SaveFileDialog()
         {
+            Title = "存储图片",
+            FileName = name,
+            Filter = "TIF|*.tif|" +
+                   "PNG|*.png|" +
+                   "JPG|*.jpg|" +
+                   "BMP|*.bmp",
+            DefaultExt = ".tif",
+        };
 
-        }
+        if (dlg.ShowDialog()==DialogResult.OK)
+            WeakReferenceMessenger.Default
+                .Send<string, string>(dlg.FileName, MessageManage.SaveACapture);
+
     }
 }

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Simscop.Spindisk.Core.Messages;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -81,18 +82,20 @@ public partial class ScanViewModel : ObservableObject
 
     void StartScan(uint mode)
     {
-        var flag = new string[]
+        var flags = new string[]
         {
             "X","Y","Z"
         };
 
-        void EnableAction(bool value) => GetType().GetProperty($"{flag[mode]}Enable")!.SetValue(this, value);
+        var flag = flags[mode];
 
-        var startValue = (double)GetType().GetProperty($"{flag[mode]}Start")!.GetValue(this)!;
-        var endValue = (double)GetType().GetProperty($"{flag[mode]}End")!.GetValue(this)!;
-        var stepValue = (double)GetType().GetProperty($"{flag[mode]}Step")!.GetValue(this)!;
+        void EnableAction(bool value) => GetType().GetProperty($"{flag}Enable")!.SetValue(this, value);
 
-        var message = SteerMessage.GetValue($"Move{flag[mode]}")!;
+        var startValue = (double)GetType().GetProperty($"{flag}Start")!.GetValue(this)!;
+        var endValue = (double)GetType().GetProperty($"{flag}End")!.GetValue(this)!;
+        var stepValue = (double)GetType().GetProperty($"{flag}Step")!.GetValue(this)!;
+
+        var message = SteerMessage.GetValue($"Move{flag}")!;
 
         Task.Run(() =>
         {
@@ -114,11 +117,12 @@ public partial class ScanViewModel : ObservableObject
             Thread.Sleep(5000);
             do
             {
+                Debug.WriteLine($"[INFO] {flag} -> {pos}");
                 WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), message);
 
                 Thread.Sleep(1500);
 
-                var path = System.IO.Path.Join(Root, $"{flag[mode]}_{pos}.TIF");
+                var path = System.IO.Path.Join(Root, $"{flag}_{pos}.TIF");
                 WeakReferenceMessenger.Default.Send<string, string>(path, MessageManage.SaveACapture);
 
                 pos += stepValue;
@@ -165,6 +169,8 @@ public partial class ScanViewModel : ObservableObject
             Thread.Sleep(2000);
             do
             {
+                Debug.WriteLine($"[INFO] Z -> {pos}");
+
                 WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
                 Thread.Sleep(TestInterval);
 

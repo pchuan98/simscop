@@ -589,6 +589,11 @@ public partial class CameraViewModel : ObservableObject
 
     private void OnAutoLevelChanged()
     {
+        _levelTimer.Stop();
+
+        if(IsCapture)
+            _levelTimer.Start();
+
         switch (IsAutoLeftLevel)
         {
             case true when !IsAutoRightLevel:
@@ -602,6 +607,7 @@ public partial class CameraViewModel : ObservableObject
                 break;
             default:
                 DhyanaObject.SetAutolevels(0);
+                _levelTimer.Stop();
                 break;
         }
     }

@@ -137,6 +137,10 @@ public partial class ScanViewModel : ObservableObject
                 Percent = (double)++step / count * 100;
             } while (step <= count && !_cancelToken.IsCancellationRequested);
 
+            if (_cancelToken.IsCancellationRequested)
+                Percent = 0;
+            
+
             EnableAction(true);
         });
     }
@@ -154,6 +158,6 @@ public partial class ScanViewModel : ObservableObject
         => StartScan(2);
 
     [RelayCommand]
-    void StopScan() 
+    void StopScan()
         => _cancelToken?.Cancel();
 }

@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding Title}"
     Width="400"
-    Height="510"
+    Height="470"
     ResizeMode="NoResize"
     Style="{StaticResource BlankWindow}"
     Topmost="True"
@@ -267,45 +267,15 @@
 
             <Border
                 Height="1"
-                Margin="2,5,2,0"
+                Margin="2,5,2,5"
                 Background="{DynamicResource RegionReverse03}" />
-
-            <UniformGrid Columns="4">
-                <TextBox
-                    Height="32"
-                    Margin="5"
-                    Padding="10,0,0,0"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding TestStart}"
-                    TextAlignment="Left" />
-
-                <TextBox
-                    Height="32"
-                    Margin="5"
-                    Padding="10,0,0,0"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding TestEnd}" />
-
-                <TextBox
-                    Height="32"
-                    Margin="5"
-                    Padding="10,0,0,0"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding TestStep}" />
-
-                <TextBox
-                    Height="32"
-                    Margin="5"
-                    Padding="10,0,0,0"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding TestInterval}" />
-            </UniformGrid>
 
             <Button
                 Margin="5"
                 HorizontalAlignment="Stretch"
-                Command="{Binding TestCommand}"
-                Content="开始测试" />
+                VerticalAlignment="Stretch"
+                Command="{Binding StopScanCommand}"
+                Content="停止扫描" />
         </StackPanel>
     </Grid>
 </Window>

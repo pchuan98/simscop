@@ -3,22 +3,20 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Simscop.Spindisk.Core.Messages;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static OpenCvSharp.Stitcher;
 
 namespace Simscop.Spindisk.Core.ViewModels;
 
 public partial class ScanViewModel : ObservableObject
 {
+    private readonly CancellationTokenSource _cancelToken = new();
+
+    public const double TimeInterval = 1500;
+
     [ObservableProperty]
     private string _root = "";
 
@@ -72,16 +70,22 @@ public partial class ScanViewModel : ObservableObject
 
     partial void OnPercentChanged(double value)
     {
-        if (Percent == 0) Title= "自动扫描";
+        if (value == 0) Title = "自动扫描";
 
-        Title = $"自动扫描 {Percent:.2f} %";
+        Title = $"自动扫描 -> {value:F2} %";
     }
 
-    [ObservableProperty] 
-    private string _title = "自动扫描";
+    [ObservableProperty]
+    private string _title = $"自动扫描";
 
     void StartScan(uint mode)
     {
+        if (string.IsNullOrEmpty(Root))
+        {
+            MessageBox.Show("请先设置存储路径");
+            return;
+        }
+
         var flags = new string[]
         {
             "X","Y","Z"
@@ -114,7 +118,7 @@ public partial class ScanViewModel : ObservableObject
             var step = 0;
 
             WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), message);
-            Thread.Sleep(5000);
+            Thread.Sleep(3000);
             do
             {
                 Debug.WriteLine($"[INFO] {flag} -> {pos}");
@@ -129,7 +133,7 @@ public partial class ScanViewModel : ObservableObject
                 pos = Math.Min(endValue, pos);
 
                 Percent = (double)++step / count * 100;
-            } while (step <= count);
+            } while (step <= count && !_cancelToken.IsCancellationRequested);
 
 
             EnableAction(true);
@@ -149,35 +153,7 @@ public partial class ScanViewModel : ObservableObject
     public void StartScanZ()
         => StartScan(2);
 
-    [ObservableProperty] 
-    public int _testInterval = 1000;
-
-    [ObservableProperty] public double _testStart = 0;
-
-    [ObservableProperty] public double _testEnd = 0;
-
-    [ObservableProperty] public double _testStep = 0;
-
     [RelayCommand]
-    public void Test()
-    {
-        Task.Run(() =>
-        {
-            var pos = TestStart;
-
-            WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
-            Thread.Sleep(2000);
-            do
-            {
-                Debug.WriteLine($"[INFO] Z -> {pos}");
-
-                WeakReferenceMessenger.Default.Send<string, string>(pos.ToString(CultureInfo.InvariantCulture), SteerMessage.MoveZ);
-                Thread.Sleep(TestInterval);
-
-                pos += TestStep;
-                pos = Math.Min(TestEnd, pos);
-
-            } while (pos <= TestEnd);
-        });
-    }
+    void StopScan() 
+        => _cancelToken?.Cancel();
 }

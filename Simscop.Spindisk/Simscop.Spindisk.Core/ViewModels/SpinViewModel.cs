@@ -55,13 +55,11 @@ public partial class SpinViewModel : ObservableObject
     [ObservableProperty]
     private bool _isConnecting = true;
 
-    partial void OnIsConnectedChanged(bool value)
-        => SpinControlEnabled = value;
-
     [RelayCommand]
     async void ConnectCom()
     {
         IsConnecting = false;
+        SpinControlEnabled = false;
         try
         {
             if (IsConnected)
@@ -76,7 +74,9 @@ public partial class SpinViewModel : ObservableObject
                     DichroicIndex = XLight.FlagC - 1;
                     EmissionIndex = XLight.FlagB - 1;
                     ExcitationIndex = XLight.FlagA - 1;
-                    DiskEnable = XLight.FlagD == 1;
+                    DiskEnable = XLight.FlagN == 1;
+
+                    SpinControlEnabled = true;
                 }
 
                 IsConnecting = true;
@@ -85,12 +85,14 @@ public partial class SpinViewModel : ObservableObject
             {
                 XLight.Disconnect();
                 IsConnected = false;
+                SpinControlEnabled = false;
             }
         }
         catch (Exception e)
         {
             IsConnecting = true;
             IsConnected = false;
+            SpinControlEnabled = false;
             MessageBox.Show("接口出现错误，连接失败");
         }
         finally

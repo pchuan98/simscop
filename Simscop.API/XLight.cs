@@ -54,7 +54,7 @@ public static class XLight
 
         while (DateTime.Now < endTime)
         {
-            if (sp.BytesToRead > 0)
+            if (sp.IsOpen && sp.BytesToRead > 0)
             {
                 var character = (char)sp.ReadChar();
                 _receiveString += character;
@@ -382,6 +382,8 @@ public static class XLight
             WaitRecall();
 
             if (_receiveString is null || !_receiveString.Contains('q')) return false;
+
+            Debug.WriteLine(_receiveString);
 
             var val = _receiveString.ToCharArray();
 

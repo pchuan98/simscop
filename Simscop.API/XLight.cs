@@ -367,12 +367,11 @@ public static class XLight
     /// </summary>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static bool LoadALlFlag()
+    public static bool LoadAllFlag()
     {
         try
         {
             _serial?.Write($"q\r");
-            _serial?.Write($"v{EndChar}");
 
             WaitRecall();
 
@@ -380,7 +379,7 @@ public static class XLight
 
             var val = _receiveString.ToCharArray();
 
-            if (val.Length != 10) return false;
+            if (val.Length != 12) return false;
 
             FlagA = (uint)int.Parse(val[10].ToString());
             FlagB = (uint)int.Parse(val[2].ToString());

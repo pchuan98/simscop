@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using System.Xml;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Simscop.API;
@@ -71,10 +72,10 @@ public partial class SpinViewModel : ObservableObject
                 {
                     XLight.LoadAllFlag();
 
-                    SpiningIndex = XLight.FlagD - 1;
-                    DichroicIndex= XLight.FlagC- 1;
-                    EmissionIndex= XLight.FlagB - 1;
-                    ExcitationIndex= XLight.FlagA - 1;
+                    SpiningIndex = XLight.FlagD;
+                    DichroicIndex = XLight.FlagC - 1;
+                    EmissionIndex = XLight.FlagB - 1;
+                    ExcitationIndex = XLight.FlagA - 1;
                     DiskEnable = XLight.FlagD == 1;
                 }
 
@@ -144,8 +145,11 @@ public partial class SpinViewModel : ObservableObject
 
     partial void OnSpiningIndexChanged(uint value)
     {
-        XLight.SetSpining(value);
+        if (XLight.FlagD == value) return;
+
+        XLight.SetDisk(value);
         DelaySpinViewEnabled(4);
+
     }
 
     #endregion

@@ -58,13 +58,28 @@ public partial class SpinViewModel : ObservableObject
         => SpinControlEnabled = value;
 
     [RelayCommand]
-    public void ConnectCom()
+    async void ConnectCom()
     {
         IsConnecting = false;
         try
         {
             if (IsConnected)
-                IsConnected = XLight.Connect(ComName);
+            {
+                IsConnected = await XLight.Connect(ComName);
+
+                if (IsConnected)
+                {
+                    XLight.LoadAllFlag();
+
+                    SpiningIndex = XLight.FlagD - 1;
+                    DichroicIndex= XLight.FlagC- 1;
+                    EmissionIndex= XLight.FlagB - 1;
+                    ExcitationIndex= XLight.FlagA - 1;
+                    DiskEnable = XLight.FlagD == 1;
+                }
+
+                IsConnecting = true;
+            }
             else
             {
                 XLight.Disconnect();

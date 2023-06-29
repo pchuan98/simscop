@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Windows;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenCvSharp;
 
 namespace Simscop.API;
 
@@ -47,7 +48,7 @@ public static class XLight
     private static void WaitValue(object sender, SerialDataReceivedEventArgs e)
     {
         var sp = (SerialPort)sender;
-        var endTime = DateTime.Now.AddSeconds(5);
+        var endTime = DateTime.Now.AddSeconds(Timeout);
 
         _receiveString = "";
 
@@ -61,8 +62,8 @@ public static class XLight
                 if (character != EndChar) continue;
                 return;
             }
-            else
-                Thread.Sleep(10);
+
+            Thread.Sleep(10);
         }
 
         _receiveString = null;
@@ -123,6 +124,20 @@ public static class XLight
     /// </summary>
     public static bool IsConnected => _serial?.IsOpen ?? false;
 
+    private static string? WaitRecall()
+    {
+        var endTime = DateTime.Now.AddSeconds(Timeout);
+
+        while (DateTime.Now < endTime)
+        {
+            if (_receiveString is not null && _receiveString.Contains(EndChar)) return _receiveString;
+            
+            Thread.Sleep(25);
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// 连接COM端口
     /// </summary>
@@ -144,21 +159,22 @@ public static class XLight
             _serial.DataReceived += WaitValue;
             
             // send 'v\r' and compare return value
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 if (!_serial.IsOpen)
                     _serial.Open();
                 _serial.Write($"v{EndChar}");
                 _serial.Write($"v{EndChar}");
-                await Task.Delay(3000);
-            });
 
-            if (_receiveString is not null && _receiveString.Contains("Crest"))
-                return true;
+                WaitRecall();
+            });
 
             Debug.WriteLine($"[XXX] Serial -> {_receiveString}");
 
-            return false;
+            var recall = _receiveString is not null && _receiveString.Contains("Crest");
+            _receiveString = null;
+
+            return recall;
         }
         catch (System.Exception e)
         {
@@ -344,5 +360,43 @@ public static class XLight
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// qB1C1D1N0A1
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static bool LoadALlFlag()
+    {
+        try
+        {
+            _serial?.Write($"q\r");
+            _serial?.Write($"v{EndChar}");
+
+            WaitRecall();
+
+            if (_receiveString is null || !_receiveString.Contains('q')) return false;
+
+            var val = _receiveString.ToCharArray();
+
+            if (val.Length != 10) return false;
+
+            FlagA = (uint)int.Parse(val[10].ToString());
+            FlagB = (uint)int.Parse(val[2].ToString());
+            FlagC = (uint)int.Parse(val[4].ToString());
+            FlagD = (uint)int.Parse(val[6].ToString());
+            FlagN = (uint)int.Parse(val[8].ToString());
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Recall Error.", e);
+        }
+        finally
+        {
+            _receiveString = null;
+        }
     }
 }

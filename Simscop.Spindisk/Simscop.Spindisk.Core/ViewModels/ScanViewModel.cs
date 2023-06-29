@@ -13,7 +13,7 @@ namespace Simscop.Spindisk.Core.ViewModels;
 
 public partial class ScanViewModel : ObservableObject
 {
-    private readonly CancellationTokenSource _cancelToken = new();
+    private CancellationTokenSource? _cancelToken;
 
     public const double TimeInterval = 1500;
 
@@ -72,7 +72,7 @@ public partial class ScanViewModel : ObservableObject
     {
         if (value == 0) Title = "自动扫描";
 
-        Title = $"自动扫描 -> {value:F2} %";
+        Title = $"自动扫描 ({value:F2} %)";
     }
 
     [ObservableProperty]
@@ -100,6 +100,8 @@ public partial class ScanViewModel : ObservableObject
         var stepValue = (double)GetType().GetProperty($"{flag}Step")!.GetValue(this)!;
 
         var message = SteerMessage.GetValue($"Move{flag}")!;
+
+        _cancelToken = new CancellationTokenSource();
 
         Task.Run(() =>
         {
@@ -135,9 +137,7 @@ public partial class ScanViewModel : ObservableObject
                 Percent = (double)++step / count * 100;
             } while (step <= count && !_cancelToken.IsCancellationRequested);
 
-
             EnableAction(true);
-
         });
     }
 

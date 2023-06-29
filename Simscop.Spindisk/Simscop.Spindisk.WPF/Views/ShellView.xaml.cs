@@ -143,13 +143,13 @@ namespace Simscop.Spindisk.WPF.Views
 
         private void AboutBtClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("explore.exe",
+            System.Diagnostics.Process.Start("explorer.exe",
                 @"https://www.simscop.com/WebShop/About.aspx");
         }
 
         private void HelpBtClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("explore.exe",
+            System.Diagnostics.Process.Start("explorer.exe",
                 @"https://www.simscop.com/WebShop/Contact.aspx");
         }
 

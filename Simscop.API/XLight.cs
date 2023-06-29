@@ -6,6 +6,8 @@ using System.Text;
 using System.IO.Ports;
 using System.Linq.Expressions;
 using System.Windows;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Simscop.API;
 
@@ -42,10 +44,39 @@ namespace Simscop.API;
 
 public static class XLight
 {
+    private static void WaitValue(object sender, SerialDataReceivedEventArgs e)
+    {
+        var sp = (SerialPort)sender;
+        var endTime = DateTime.Now.AddSeconds(5);
+
+        _receiveString = "";
+
+        while (DateTime.Now < endTime)
+        {
+            if (sp.BytesToRead > 0)
+            {
+                var character = (char)sp.ReadChar();
+                _receiveString += character;
+
+                if (character != '\r') continue;
+                return;
+            }
+            else
+                Thread.Sleep(10);
+        }
+
+        _receiveString = null;
+    }
+
     /// <summary>
     /// 串口对象
     /// </summary>
     private static SerialPort? _serial;
+
+    /// <summary>
+    /// 接受到的字符
+    /// </summary>
+    private static string? _receiveString = null;
 
     /// <summary>
     /// 判断最终字符
@@ -98,7 +129,7 @@ public static class XLight
     /// <param name="port"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static bool Connect(string port)
+    public static async Task<bool> Connect(string port)
     {
         try
         {
@@ -110,12 +141,23 @@ public static class XLight
                 StopBits = StopBits.One,
                 Parity = Parity.None
             };
+            _serial.DataReceived += WaitValue;
             if (!_serial.IsOpen)
                 _serial.Open();
 
+            // send 'v\r' and compare return value
+            await Task.Run(async () =>
+            {
+                _serial.Write("v\r");
+                await Task.Delay(3000);
+            });
+
+            if (_receiveString!.Contains("Crest"))
+                return true;
+
             Debug.WriteLine("[XXX] Serial Connected Success");
 
-            return _serial.IsOpen;
+            return false;
         }
         catch (System.Exception e)
         {
@@ -143,7 +185,7 @@ public static class XLight
                     Parity = Parity.None
                 };
 
-
+                // 这里已经可以实现了，但是没必要，太麻烦了
             }
         }
         catch (Exception e)

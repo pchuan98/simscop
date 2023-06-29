@@ -58,7 +58,7 @@ public static class XLight
                 var character = (char)sp.ReadChar();
                 _receiveString += character;
 
-                if (character != '\r') continue;
+                if (character != EndChar) continue;
                 return;
             }
             else
@@ -142,20 +142,21 @@ public static class XLight
                 Parity = Parity.None
             };
             _serial.DataReceived += WaitValue;
-            if (!_serial.IsOpen)
-                _serial.Open();
-
+            
             // send 'v\r' and compare return value
             await Task.Run(async () =>
             {
-                _serial.Write("v\r");
+                if (!_serial.IsOpen)
+                    _serial.Open();
+                _serial.Write($"v{EndChar}");
+                _serial.Write($"v{EndChar}");
                 await Task.Delay(3000);
             });
 
-            if (_receiveString!.Contains("Crest"))
+            if (_receiveString is not null && _receiveString.Contains("Crest"))
                 return true;
 
-            Debug.WriteLine("[XXX] Serial Connected Success");
+            Debug.WriteLine($"[XXX] Serial -> {_receiveString}");
 
             return false;
         }

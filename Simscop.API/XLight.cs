@@ -131,7 +131,7 @@ public static class XLight
         while (DateTime.Now < endTime)
         {
             if (_receiveString is not null && _receiveString.Contains(EndChar)) return _receiveString;
-            
+
             Thread.Sleep(25);
         }
 
@@ -157,12 +157,15 @@ public static class XLight
                 Parity = Parity.None
             };
             _serial.DataReceived += WaitValue;
-            
+
             // send 'v\r' and compare return value
             await Task.Run(() =>
             {
                 if (!_serial.IsOpen)
                     _serial.Open();
+
+                _serial.ReadExisting();
+
                 _serial.Write($"v{EndChar}");
                 _serial.Write($"v{EndChar}");
 
@@ -173,6 +176,8 @@ public static class XLight
 
             var recall = _receiveString is not null && _receiveString.Contains("Crest");
             _receiveString = null;
+
+            if (recall == false) _serial.Close();
 
             return recall;
         }
@@ -371,6 +376,7 @@ public static class XLight
     {
         try
         {
+            _serial?.ReadExisting();
             _serial?.Write($"q\r");
 
             WaitRecall();

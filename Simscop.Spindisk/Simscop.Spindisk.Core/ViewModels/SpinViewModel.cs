@@ -149,7 +149,7 @@ public partial class SpinViewModel : ObservableObject
     {
         if (XLight.FlagD == value) return;
 
-        XLight.SetDisk(value);
+        XLight.SetSpining(value);
         DelaySpinViewEnabled(4);
 
     }

@@ -641,12 +641,22 @@ public partial class CameraViewModel : ObservableObject
     [ObservableProperty]
     private double _leftLevel = 0;
 
+    partial void OnLeftLevelChanged(double value)
+    {
+        if (!IsAutoLeftLevel) DhyanaObject.SetLeftLevels(value);
+    }
+
     /// <summary>
     /// 8bit  - 254
     /// 16bit - 65534
     /// </summary>
     [ObservableProperty]
     private double _rightLevel = 0;
+
+    partial void OnRightLevelChanged(double value)
+    {
+        if (!IsAutoRightLevel) DhyanaObject.SetRightLevels(value);
+    }
     #endregion
 
     #region Noise

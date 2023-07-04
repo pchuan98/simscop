@@ -27,6 +27,7 @@ namespace Simscop.Spindisk.WPF.Views
         private SteerViewModel steerVM;
         private LaserViewModel laserVM;
         private ScanViewModel scanVM;
+        private ExampleViewModel exampleVM;
 
 
         private int frameCount = 0;
@@ -34,6 +35,7 @@ namespace Simscop.Spindisk.WPF.Views
 
         private CameraView cameraView;
         private ScanView scanView;
+        private ExampleView exampleView;
 
         public ShellView()
         {
@@ -45,22 +47,30 @@ namespace Simscop.Spindisk.WPF.Views
             Pic3.MouseLeftButtonDown += PicDown;
             Pic4.MouseLeftButtonDown += PicDown;
 
-
-
             cameraVM = new CameraViewModel();
             shellVM = new ShellViewModel();
             spinVM = new SpinViewModel();
             steerVM = new SteerViewModel();
             laserVM = new LaserViewModel();
             scanVM = new ScanViewModel();
+            exampleVM = new ExampleViewModel()
+            {
+                CameraVM = cameraVM,
+                ScanVM = scanVM,
+                SteerVM = steerVM
+            };
 
             cameraView = new()
             {
-                DataContext=cameraVM,
+                DataContext = cameraVM,
             };
             scanView = new()
             {
                 DataContext = scanVM,
+            };
+            exampleView = new()
+            {
+                DataContext = exampleVM,
             };
 
             SetDataContext();
@@ -133,7 +143,7 @@ namespace Simscop.Spindisk.WPF.Views
             cameraView.Topmost = true;
             cameraView.Topmost = false;
         }
-        
+
 
         protected override void OnClosed(EventArgs e)
         {
@@ -159,6 +169,13 @@ namespace Simscop.Spindisk.WPF.Views
             scanView.Show();
             scanView.Topmost = true;
             scanView.Topmost = false;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            exampleView.Show();
+            exampleView.Topmost = true;
+            exampleView.Topmost = false;
         }
     }
 }

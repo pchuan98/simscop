@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using Simscop.Spindisk.Core.Models; 
 using Simscop.Spindisk.Core.ViewModels;
 using Simscop.Spindisk.WPF.Views;
 
@@ -31,7 +32,7 @@ namespace Simscop.Spindisk.WPF
 
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             var view = new ShellView()
             {

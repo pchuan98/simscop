@@ -108,9 +108,11 @@ public partial class ScanViewModel : ObservableObject
             EnableAction(false);
             Percent = 0;
 
-            if (endValue <= startValue | stepValue <= 0)
+            // 同号满足条件
+            if (stepValue * (endValue - startValue) <= 0 | stepValue == 0)
             {
                 EnableAction(true);
+                MessageBox.Show("参数设置有误");
                 return;
             }
 
@@ -132,14 +134,15 @@ public partial class ScanViewModel : ObservableObject
                 WeakReferenceMessenger.Default.Send<string, string>(path, MessageManage.SaveACapture);
 
                 pos += stepValue;
-                pos = Math.Min(endValue, pos);
+
+                pos = stepValue > 0 ? Math.Min(pos, endValue) : Math.Max(pos, endValue);
 
                 Percent = (double)++step / count * 100;
             } while (step <= count && !_cancelToken.IsCancellationRequested);
 
             if (_cancelToken.IsCancellationRequested)
                 Percent = 0;
-            
+
 
             EnableAction(true);
         });

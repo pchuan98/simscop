@@ -105,4 +105,13 @@ public partial class SteerViewModel : ObservableObject
     public void MoveZ(double step)
         => _motor.SetZOffset(step);
 
+    public void MoveToX(double value)
+        => _motor.SetXPosition(value);
+
+    public void MoveToY(double value)
+        => _motor.SetYPosition(value);
+
+    public void MoveToZ(double value)
+        => _motor.SetZPosition(value);
+
 }

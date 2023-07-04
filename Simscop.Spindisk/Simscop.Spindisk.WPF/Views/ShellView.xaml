@@ -45,7 +45,8 @@
                 Margin="5,0"
                 Background="{DynamicResource Region02}"
                 BorderThickness="0"
-                Content="图像"
+                Click="Button_Click"
+                Content="示例"
                 FontFamily="{StaticResource Harmony}"
                 FontSize="14" />
             <Button

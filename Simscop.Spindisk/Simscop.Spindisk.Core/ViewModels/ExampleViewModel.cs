@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,15 +21,27 @@ public class ExampleModel
 
     public double Z { get; set; }
 
-    public double Exposure { get; set; }
+    public double? Exposure { get; set; }
 
-    public double LeftLevel { get; set; }
+    public double? LeftLevel { get; set; }
 
-    public double Start { get; set; }
+    public double? Contrast { get; set; }
 
-    public double Stop { get; set; }
+    public double? Gamma { get; set; }
 
-    public double Step { get; set; } = 1;
+    public double? Start { get; set; }
+
+    public double? Stop { get; set; }
+
+    public double? Step { get; set; } = 1;
+
+
+    static double? ConveterDouble(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return null;
+        return double.TryParse(value, out var result) ? null : result;
+
+    }
 
     public static bool LoadFrom(string path, out List<ExampleModel> models)
     {
@@ -48,7 +61,8 @@ public class ExampleModel
         foreach (var item in result)
         {
             var data = item.Split(',');
-            if (data.Length != 8) continue;
+
+            if (data.Length < 4) continue;
 
             try
             {
@@ -58,10 +72,13 @@ public class ExampleModel
                     X = double.Parse(data[1]),
                     Y = double.Parse(data[2]),
                     Z = double.Parse(data[3]),
-                    Exposure = double.Parse(data[4]),
-                    LeftLevel = double.Parse(data[5]),
-                    Start = double.Parse(data[6]),
-                    Stop = double.Parse(data[7]),
+
+                    Exposure = data.Length >= 5 ? ConveterDouble(data[4]) : null,
+                    LeftLevel = data.Length >= 6 ? ConveterDouble(data[5]) : null,
+                    Gamma = data.Length >= 7 ? ConveterDouble(data[6]) : null,
+                    Contrast = data.Length >= 8 ? ConveterDouble(data[7]) : null,
+                    Start = data.Length >= 9 ? ConveterDouble(data[8]) : null,
+                    Stop = data.Length >= 10 ? ConveterDouble(data[9]) : null,
                 };
                 models.Add(m);
             }
@@ -140,16 +157,18 @@ public partial class ExampleViewModel : ObservableObject
 
         if (CameraVM == null || !CameraVM.CameraConnected) return;
         CameraVM.IsAutoExposure = false;
-        CameraVM.Exposure = Model.Exposure;
+        if (Model.Exposure != null) CameraVM.Exposure = (double)Model.Exposure;
 
         CameraVM.IsAutoLeftLevel = false;
-        CameraVM.LeftLevel = Model.LeftLevel;
+        if (Model.LeftLevel != null) CameraVM.LeftLevel = (double)Model.LeftLevel;
 
+        if (Model.Gamma != null) CameraVM.Gamma = (double)Model.Gamma;
+        if (Model.Contrast != null) CameraVM.Contrast = (double)Model.Contrast;
 
         if (ScanVM == null) return;
-        ScanVM.ZStart = Model.Start;
-        ScanVM.ZEnd = Model.Stop;
-        ScanVM.ZStep = Model.Step;
+        if (Model.Start != null) ScanVM.ZStart = (double)Model.Start;
+        if (Model.Stop != null) ScanVM.ZEnd = (double)Model.Stop;
+        ScanVM.ZStep = ScanVM.ZStart > ScanVM.ZEnd ? -1 : 1;
     }
 
 }
